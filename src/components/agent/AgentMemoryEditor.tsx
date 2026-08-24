@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import type { AgentMind } from "@/types";
-import { Save, User, Brain } from "lucide-react";
 
 export interface AgentMemoryEditorProps {
   mind: AgentMind | null;
@@ -26,56 +25,55 @@ export function AgentMemoryEditor({ mind, loading, onSave }: AgentMemoryEditorPr
     setSaving(false);
   };
 
-  if (loading && !mind) {
-    return <div className="agent-pane__loading">Loading agent mind…</div>;
-  }
+  const isDirty = memory !== (mind?.memory ?? "") || user !== (mind?.user ?? "");
 
   return (
-    <div className="agent-memory">
-      <div className="agent-memory__section">
-        <div className="agent-memory__header">
-          <Brain size={16} />
-          <h3>Agent Working Memory</h3>
-        </div>
-        <p className="agent-memory__hint">
-          Persistent context, rules, coding guidelines, and knowledge retained across all threads.
-        </p>
-        <textarea
-          className="agent-memory__textarea"
-          value={memory}
-          onChange={(e) => setMemory(e.target.value)}
-          placeholder="E.g. Prefers functional programming, React hooks, strict TypeScript interfaces…"
-          rows={10}
-        />
-      </div>
+    <div className="agent-face agent-memory">
+      <div className="agent-memory__scroll">
+        <div className="agent-memory__column">
+          <section className="agent-memory__block">
+            <header className="agent-memory__block-head">
+              <h3 className="agent-memory__title">Notes</h3>
+              <p className="agent-memory__hint">
+                The agent reads and updates this as it works. You can edit directly.
+              </p>
+            </header>
+            <textarea
+              className="agent-memory__textarea"
+              value={memory}
+              onChange={(e) => setMemory(e.target.value)}
+              placeholder="Guidelines, project rules, conventions, and learnings the agent retains…"
+              rows={8}
+            />
+          </section>
 
-      <div className="agent-memory__section">
-        <div className="agent-memory__header">
-          <User size={16} />
-          <h3>User Profile & Project Role</h3>
-        </div>
-        <p className="agent-memory__hint">
-          Information about your role, environment, and preferences.
-        </p>
-        <textarea
-          className="agent-memory__textarea"
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
-          placeholder="E.g. Senior Full-Stack Engineer working on Windows 11 and Rust/React."
-          rows={4}
-        />
-      </div>
+          <section className="agent-memory__block">
+            <header className="agent-memory__block-head">
+              <h3 className="agent-memory__title">Who you are</h3>
+              <p className="agent-memory__hint">
+                Persistent context about your preferences, background, or conventions.
+              </p>
+            </header>
+            <textarea
+              className="agent-memory__textarea"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              placeholder="Information about your role, environment, and preferred tools…"
+              rows={4}
+            />
+          </section>
 
-      <div className="agent-memory__footer">
-        <button
-          className="primary-button"
-          disabled={saving || loading}
-          onClick={handleSave}
-          type="button"
-        >
-          <Save size={14} />
-          {saving ? "Saving…" : "Save Memory"}
-        </button>
+          <footer className="agent-memory__footer">
+            <button
+              className="primary-button"
+              disabled={saving || loading || !isDirty}
+              onClick={handleSave}
+              type="button"
+            >
+              {saving ? "Saving…" : "Save"}
+            </button>
+          </footer>
+        </div>
       </div>
     </div>
   );

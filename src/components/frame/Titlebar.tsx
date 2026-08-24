@@ -1,7 +1,7 @@
 import React from "react";
-import type { WorkMode, AppearanceTheme } from "@/types";
+import type { WorkMode } from "@/types";
 import { getService } from "@/services";
-import { PanelLeft, Sparkles, Minus, Square, X, Bell } from "lucide-react";
+import { PanelLeft, Minus, Square, X, Bell } from "lucide-react";
 
 export interface TitlebarProps {
   mode: WorkMode;
@@ -26,7 +26,7 @@ export function Titlebar({
             alt=""
             aria-hidden="true"
             className="brand-lockup__mark"
-            src="/output/assets/bridge-mind-symbol.png"
+            src="/assets/bridge-mind-symbol.png"
           />
           <span data-tauri-drag-region>BridgeMind</span>
           <span className="brand-lockup__one" data-tauri-drag-region>

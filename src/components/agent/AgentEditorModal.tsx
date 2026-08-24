@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { AgentEngine } from "@/types";
-import { X, Bot, Check, Sparkles } from "lucide-react";
+import { getAgentLogoUrl } from "@/utils/logos";
+import { X, Bot, Check } from "lucide-react";
 
 export interface AgentEditorModalProps {
   open: boolean;
@@ -88,22 +89,23 @@ export function AgentEditorModal({ open, onClose, onCreate }: AgentEditorModalPr
           <div className="engine-grid">
             {ENGINE_OPTIONS.map((engine) => {
               const isSelected = selectedEngine === engine.id;
+              const logoUrl = getAgentLogoUrl(engine.id);
               return (
                 <button
                   key={engine.id}
                   aria-pressed={isSelected}
                   className={`engine-chip ${isSelected ? "engine-chip--selected" : ""}`}
-                  onClick={() => setSelectedEngine(engine.id)}
+                  onClick={() => {
+                    setSelectedEngine(engine.id);
+                    if (!name) setName(engine.name);
+                  }}
                   type="button"
                 >
                   <span aria-hidden="true" className="engine-mark">
                     <img
-                      src={`/output/assets/logos/agent-${engine.id}-onDark.png`}
+                      src={logoUrl}
                       alt=""
-                      style={{ width: 14, height: 14, objectFit: "contain" }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = `/output/assets/logos/agent-${engine.id}.png`;
-                      }}
+                      style={{ width: 14, height: 14, objectFit: "contain", display: "block" }}
                     />
                   </span>
                   <span className="engine-chip__copy">

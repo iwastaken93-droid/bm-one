@@ -1,5 +1,6 @@
 import React from "react";
 import type { AgentEngine } from "@/types";
+import { getAgentLogoUrl } from "@/utils/logos";
 
 const AGENT_LINEUP: Array<{ engine: AgentEngine; label: string }> = [
   { engine: "claude-code", label: "Claude Code" },
@@ -25,7 +26,7 @@ export function AuthOrbit() {
       <span className="auth-orbit__bloom auth-orbit__bloom--amber" aria-hidden="true" />
       <span className="auth-orbit__bloom auth-orbit__bloom--blue" aria-hidden="true" />
       <img
-        src="/output/assets/bridge-mind-symbol.png"
+        src="/assets/bridge-mind-symbol.png"
         alt=""
         className="auth-orbit__mark"
         aria-hidden="true"
@@ -33,6 +34,7 @@ export function AuthOrbit() {
       <div className="auth-orbit__agents" aria-hidden="true">
         {AGENT_LINEUP.map((agent, index) => {
           const angleDeg = (index / total) * 360;
+          const logoUrl = getAgentLogoUrl(agent.engine);
           return (
             <span
               key={agent.engine}
@@ -42,13 +44,9 @@ export function AuthOrbit() {
             >
               <span className="auth-orbit__chip">
                 <img
-                  src={`/output/assets/logos/agent-${agent.engine.replace("-code", "").replace("deep-seek", "deepseek")}.png`}
+                  src={logoUrl}
                   alt=""
-                  style={{ width: 18, height: 18, objectFit: "contain" }}
-                  onError={(e) => {
-                    // Fallback to onDark variant
-                    (e.target as HTMLImageElement).src = `/output/assets/logos/agent-${agent.engine}-onDark.png`;
-                  }}
+                  style={{ width: 18, height: 18, objectFit: "contain", display: "block" }}
                 />
               </span>
             </span>

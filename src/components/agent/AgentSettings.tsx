@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { AgentProfile, AgentEngine } from "@/types";
-import { Save, Trash2, Shield, Cpu } from "lucide-react";
+import { getAgentLogoUrl } from "@/utils/logos";
+import { Check } from "lucide-react";
 
 export interface AgentSettingsProps {
   agent: AgentProfile;
@@ -9,115 +10,165 @@ export interface AgentSettingsProps {
   onDelete: (id: string) => void;
 }
 
-const ENGINES: Array<{ id: AgentEngine; label: string }> = [
-  { id: "claude-code", label: "Anthropic Claude Code" },
-  { id: "codex", label: "Codex CLI" },
-  { id: "cursor", label: "Cursor Agent" },
-  { id: "gemini", label: "Google Gemini CLI" },
-  { id: "github-copilot", label: "GitHub Copilot" },
-  { id: "droid", label: "Droid" },
-  { id: "open-code", label: "OpenCode" },
-  { id: "deep-seek", label: "DeepSeek Harness" },
-  { id: "grok", label: "xAI Grok Build" },
-  { id: "amp", label: "Amp" },
-  { id: "antigravity", label: "Antigravity" },
-  { id: "aider", label: "Aider" },
-  { id: "terminal", label: "Standard PTY Terminal" }
+const ENGINE_OPTIONS: Array<{ id: AgentEngine; name: string; tagline: string }> = [
+  { id: "claude-code", name: "Claude Code", tagline: "Autonomous coding agent" },
+  { id: "codex", name: "Codex CLI", tagline: "Fast command-line edits" },
+  { id: "cursor", name: "Cursor Agent", tagline: "Multi-file project refactors" },
+  { id: "gemini", name: "Gemini CLI", tagline: "Long-context reasoning" },
+  { id: "github-copilot", name: "GitHub Copilot", tagline: "Workspace context integration" },
+  { id: "droid", name: "Droid", tagline: "Cross-platform automation" },
+  { id: "open-code", name: "OpenCode", tagline: "Open-source local model harness" },
+  { id: "deep-seek", name: "DeepSeek", tagline: "Mathematical reasoning" },
+  { id: "grok", name: "Grok Build", tagline: "Creative coding assistant" },
+  { id: "amp", name: "Amp", tagline: "High-throughput parallel tasks" },
+  { id: "antigravity", name: "Antigravity", tagline: "Large system architecture" },
+  { id: "aider", name: "Aider", tagline: "Git-paired pair programming" }
 ];
 
 export function AgentSettings({ agent, loading, onUpdate, onDelete }: AgentSettingsProps) {
   const [name, setName] = useState(agent.name);
   const [engine, setEngine] = useState<AgentEngine>(agent.engine);
   const [purpose, setPurpose] = useState(agent.purpose);
+  const [effort, setEffort] = useState<"low" | "medium" | "high">("high");
+  const [mode, setMode] = useState<"auto" | "full" | "readonly">("auto");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    await onUpdate({
-      ...agent,
-      name,
-      engine,
-      purpose
-    });
+    await onUpdate({ ...agent, name, engine, purpose });
     setSaving(false);
   };
 
   return (
-    <form className="agent-settings" onSubmit={handleSave}>
-      <div className="form-field">
-        <label>Agent Display Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          maxLength={80}
-        />
-      </div>
+    <div className="agent-face agent-settings agent-settings--profile">
+      <div className="agent-settings__scroll">
+        <form className="agent-settings__column" onSubmit={handleSave}>
+          <section className="agent-setting-group">
+            <label className="agent-setting-label" htmlFor="agent-settings-name">
+              Name
+            </label>
+            <input
+              id="agent-settings-name"
+              maxLength={80}
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              required
+            />
+          </section>
 
-      <div className="form-field">
-        <label>
-          <Cpu size={13} style={{ display: "inline", marginRight: 6 }} />
-          Underlying Engine / Driver
-        </label>
-        <select value={engine} onChange={(e) => setEngine(e.target.value as AgentEngine)}>
-          {ENGINES.map((eng) => (
-            <option key={eng.id} value={eng.id}>
-              {eng.label}
-            </option>
-          ))}
-        </select>
-      </div>
+          <section className="agent-setting-group">
+            <label className="agent-setting-label">Engine</label>
+            <div className="engine-grid">
+              {ENGINE_OPTIONS.map((opt) => {
+                const isSelected = engine === opt.id;
+                const logoUrl = getAgentLogoUrl(opt.id);
+                return (
+                  <button
+                    key={opt.id}
+                    aria-pressed={isSelected}
+                    className={`engine-chip ${isSelected ? "engine-chip--selected" : ""}`}
+                    onClick={() => setEngine(opt.id)}
+                    type="button"
+                  >
+                    <span aria-hidden="true" className="engine-mark">
+                      <img
+                        src={logoUrl}
+                        alt=""
+                        style={{ width: 14, height: 14, objectFit: "contain", display: "block" }}
+                      />
+                    </span>
+                    <span className="engine-chip__copy">
+                      <strong>{opt.name}</strong>
+                      <small>{opt.tagline}</small>
+                    </span>
+                    {isSelected && (
+                      <Check size={12} aria-hidden="true" className="engine-chip__check" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
 
-      <div className="form-field">
-        <label>System Purpose / Directives</label>
-        <textarea
-          value={purpose}
-          onChange={(e) => setPurpose(e.target.value)}
-          rows={5}
-          maxLength={4000}
-          placeholder="Specific responsibilities, scope boundaries, or architectural directives…"
-        />
-      </div>
+          <section className="agent-setting-group">
+            <label className="agent-setting-label" htmlFor="agent-settings-brief">
+              Brief
+            </label>
+            <p className="agent-setting-hint">
+              The agent reads this on every turn; the agent learns the rest.
+            </p>
+            <textarea
+              id="agent-settings-brief"
+              maxLength={4000}
+              onChange={(e) => setPurpose(e.target.value)}
+              rows={6}
+              value={purpose}
+            />
+          </section>
 
-      <div className="form-field">
-        <label>
-          <Shield size={13} style={{ display: "inline", marginRight: 6 }} />
-          Execution Permission Boundary
-        </label>
-        <div className="agent-settings__permissions">
-          <label className="radio-label">
-            <input type="radio" name="perm" defaultChecked />
-            <span>Full Workspace Access (Read, Write, Terminal PTY Execution)</span>
-          </label>
-          <label className="radio-label">
-            <input type="radio" name="perm" />
-            <span>Auto-Accept File Edits (Terminal prompts require approval)</span>
-          </label>
-          <label className="radio-label">
-            <input type="radio" name="perm" />
-            <span>Read-Only Research (No file modifications permitted)</span>
-          </label>
-        </div>
-      </div>
+          <section className="agent-setting-group">
+            <label className="agent-setting-label">Reasoning effort</label>
+            <div className="setting-pills">
+              {(["low", "medium", "high"] as const).map((lvl) => (
+                <button
+                  key={lvl}
+                  className={`setting-pill ${effort === lvl ? "setting-pill--selected" : ""}`}
+                  onClick={() => setEffort(lvl)}
+                  type="button"
+                >
+                  {lvl.charAt(0).toUpperCase() + lvl.slice(1)}
+                </button>
+              ))}
+            </div>
+          </section>
 
-      <div className="agent-settings__footer">
-        <button className="primary-button" disabled={saving || loading} type="submit">
-          <Save size={14} />
-          {saving ? "Saving…" : "Save Changes"}
-        </button>
+          <section className="agent-setting-group">
+            <label className="agent-setting-label">Mode</label>
+            <div className="setting-pills">
+              <button
+                className={`setting-pill ${mode === "auto" ? "setting-pill--selected" : ""}`}
+                onClick={() => setMode("auto")}
+                type="button"
+              >
+                Auto-accept edits
+              </button>
+              <button
+                className={`setting-pill ${mode === "full" ? "setting-pill--selected" : ""}`}
+                onClick={() => setMode("full")}
+                type="button"
+              >
+                Full access
+              </button>
+              <button
+                className={`setting-pill ${mode === "readonly" ? "setting-pill--selected" : ""}`}
+                onClick={() => setMode("readonly")}
+                type="button"
+              >
+                Read-only
+              </button>
+            </div>
+          </section>
 
-        <button
-          className="secondary-button secondary-button--danger"
-          disabled={saving || loading}
-          onClick={() => onDelete(agent.id)}
-          type="button"
-        >
-          <Trash2 size={14} />
-          Delete Agent
-        </button>
+          <footer className="agent-settings__footer">
+            <button
+              className="primary-button"
+              disabled={saving || loading}
+              type="submit"
+            >
+              {saving ? "Saving…" : "Save"}
+            </button>
+            <button
+              className="secondary-button secondary-button--danger"
+              disabled={saving || loading}
+              onClick={() => onDelete(agent.id)}
+              type="button"
+            >
+              Delete Agent
+            </button>
+          </footer>
+        </form>
       </div>
-    </form>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import type { AgentProfile, AgentFace, AgentMind, AgentSkill } from "@/types";
+import { getAgentLogoUrl } from "@/utils/logos";
 import { AgentMemoryEditor } from "./AgentMemoryEditor";
 import { AgentSkillsCatalog } from "./AgentSkillsCatalog";
 import { AgentSettings } from "./AgentSettings";
@@ -18,6 +19,21 @@ export interface AgentHubProps {
   onUpdateAgent: (agent: AgentProfile) => Promise<void>;
   onDeleteAgent: (id: string) => void;
 }
+
+const ENGINE_LABELS: Record<string, string> = {
+  "claude-code": "Claude Code",
+  "codex": "Codex",
+  "cursor": "Cursor",
+  "gemini": "Gemini CLI",
+  "github-copilot": "GitHub Copilot",
+  "droid": "Droid",
+  "open-code": "OpenCode",
+  "deep-seek": "DeepSeek",
+  "grok": "Grok",
+  "amp": "Amp",
+  "antigravity": "Antigravity",
+  "aider": "Aider"
+};
 
 export function AgentHub({
   agent,
@@ -48,23 +64,23 @@ export function AgentHub({
     );
   }
 
+  const logoUrl = getAgentLogoUrl(agent.engine);
+  const engineName = ENGINE_LABELS[agent.engine] ?? agent.engine;
+
   return (
     <section className="pane agent-pane">
       <header className="pane-titlebar pane-titlebar--large">
-        <div className="agent-pane__identity">
+        <span aria-hidden="true" className="pane-titlebar__icon">
           <img
-            src={`/output/assets/logos/agent-${agent.engine}-onDark.png`}
+            src={logoUrl}
             alt=""
-            className="agent-pane__logo"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = `/output/assets/logos/agent-${agent.engine}.png`;
-            }}
+            style={{ width: 16, height: 16, objectFit: "contain", display: "block" }}
           />
-          <div className="agent-pane__copy">
-            <strong>{agent.name}</strong>
-            <small>Powered by {agent.engine}</small>
-          </div>
-        </div>
+        </span>
+        <span className="pane-titlebar__copy">
+          <strong>{agent.name}</strong>
+          <small>Powered by {engineName}</small>
+        </span>
 
         <nav aria-label="Agent section switcher" className="agent-face-toggle">
           <button
@@ -130,8 +146,10 @@ export function AgentHub({
         )}
         {face === "chats" && (
           <div className="empty-surface empty-surface--embedded">
-            <h3>No Active Agent Threads</h3>
-            <p>Start a conversation in Chat mode or Code Workspace to engage this agent.</p>
+            <h3 className="empty-surface__title">No Active Agent Threads</h3>
+            <p className="empty-surface__detail">
+              Start a conversation in Chat mode or Code Workspace to engage this agent.
+            </p>
           </div>
         )}
       </main>
