@@ -5,12 +5,18 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag version (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
 
 permissions:
   contents: write
 
 jobs:
   build-tauri:
+    name: Build & Bundle (${{ matrix.platform }})
     strategy:
       fail-fast: false
       matrix:
@@ -48,20 +54,30 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
 
       - name: Install Frontend Dependencies
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Build Frontend
         run: npm run build
+
+      - name: Determine Release Tag
+        id: vars
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build Desktop Application and Create Release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: "BridgeMind One ${{ github.ref_name }}"
+          tagName: ${{ steps.vars.outputs.tag }}
+          releaseName: "BridgeMind One ${{ steps.vars.outputs.tag }}"
           releaseBody: |
-            ## BridgeMind One Desktop Release (${{ github.ref_name }})
+            ## BridgeMind One Desktop Release (${{ steps.vars.outputs.tag }})
             
             ### ✨ Features Included:
             - **13 AI Agent Drivers:** Claude Code, Codex CLI, Cursor Agent, Gemini CLI, Copilot, Droid, OpenCode, DeepSeek, Grok Build, Amp, Antigravity, Aider, and Terminal PTY.
@@ -69,6 +85,6 @@ jobs:
             - **Workspace Studio:** Recursive tiling split-pane layout manager with integrated ConPTY shell and WebView2 browser surfaces.
             - **Multi-Turn Assistant Chat & Token Accounting.**
             - **Scheduled Routines & Background Cron Jobs.**
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           args: --target ${{ matrix.target }}
