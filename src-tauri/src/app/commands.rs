@@ -100,6 +100,8 @@ pub async fn credits_balance() -> Result<serde_json::Value, String> {
 
 #[command]
 pub async fn bootstrap(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let agent_id = "a0000000-0000-0000-0000-000000000001";
+    let browser_token = uuid::Uuid::new_v4().to_string();
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "preferences": {
@@ -107,13 +109,13 @@ pub async fn bootstrap(_request: serde_json::Value) -> Result<serde_json::Value,
             "workMode": "agent",
             "route": { "kind": "agent" },
             "selectedWorkspaceId": null,
-            "selectedAgentId": "a0000000-0000-0000-0000-000000000001",
+            "selectedAgentId": agent_id,
             "sidebarVisible": true,
             "appearance": "dark",
             "zoomPercent": 100
         },
         "agents": [{
-            "id": "a0000000-0000-0000-0000-000000000001",
+            "id": agent_id,
             "name": "Claude Code",
             "engine": "claude-code",
             "purpose": "Full-stack code generation and refactoring assistant.",
@@ -121,13 +123,14 @@ pub async fn bootstrap(_request: serde_json::Value) -> Result<serde_json::Value,
         }],
         "workspaces": [],
         "recoveryNotices": [],
-        "persistenceReadOnly": false
+        "persistenceReadOnly": false,
+        "browserDocumentToken": browser_token
     }))
 }
 
 #[command]
-pub async fn save_shell_state(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn save_shell_state(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({}))
 }
 
 #[command]
@@ -142,33 +145,17 @@ pub async fn add_workspace(request: serde_json::Value) -> Result<serde_json::Val
 }
 
 #[command]
-pub async fn load_workspace_layout(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let ws_id = request["request"]["workspaceId"].as_str().unwrap_or("default");
-    let tab_id = uuid::Uuid::new_v4().to_string();
-    let leaf_id = uuid::Uuid::new_v4().to_string();
+pub async fn load_workspace_layout(_request: serde_json::Value) -> Result<serde_json::Value, String> {
     Ok(serde_json::json!({
-        "schemaVersion": 1,
-        "workspaceId": ws_id,
-        "activeTabId": tab_id,
-        "tabs": [{
-            "id": tab_id,
-            "displayName": "Terminal 1",
-            "focusedLeafId": leaf_id,
-            "root": {
-                "type": "leaf",
-                "id": leaf_id,
-                "occupant": {
-                    "kind": "terminal",
-                    "sessionId": uuid::Uuid::new_v4().to_string()
-                }
-            }
-        }]
+        "layout": null,
+        "recoveryNotices": [],
+        "readOnly": false
     }))
 }
 
 #[command]
-pub async fn save_workspace_layout(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn save_workspace_layout(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({}))
 }
 
 // ---------------------------------------------------------------------------
@@ -177,24 +164,39 @@ pub async fn save_workspace_layout(_request: serde_json::Value) -> Result<(), St
 
 #[command]
 pub async fn list_agent_profiles(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let agent_id = "a0000000-0000-0000-0000-000000000001";
     Ok(serde_json::json!([{
-        "id": "a0000000-0000-0000-0000-000000000001",
+        "agentId": agent_id,
         "name": "Claude Code",
         "engine": "claude-code",
-        "purpose": "Full-stack code generation and refactoring assistant.",
-        "createdAtUnixMs": 1724457600000i64
+        "brief": "Full-stack code generation and refactoring assistant.",
+        "defaultMode": "fullAccess",
+        "defaultPlan": true,
+        "defaultModel": null,
+        "defaultProviderOptions": [],
+        "memoryBudget": 4096,
+        "reflectionMode": "adaptive",
+        "allowAgentScheduling": true,
+        "confirmedByBuilder": true
     }]))
 }
 
 #[command]
 pub async fn load_agent_profile(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let agent_id = request["request"]["agentId"].as_str().unwrap_or("default");
+    let agent_id = request["request"]["agentId"].as_str().unwrap_or("a0000000-0000-0000-0000-000000000001");
     Ok(serde_json::json!({
-        "id": agent_id,
+        "agentId": agent_id,
         "name": "Claude Code",
         "engine": "claude-code",
-        "purpose": "Full-stack code generation and refactoring assistant.",
-        "createdAtUnixMs": 1724457600000i64
+        "brief": "Full-stack code generation and refactoring assistant.",
+        "defaultMode": "fullAccess",
+        "defaultPlan": true,
+        "defaultModel": null,
+        "defaultProviderOptions": [],
+        "memoryBudget": 4096,
+        "reflectionMode": "adaptive",
+        "allowAgentScheduling": true,
+        "confirmedByBuilder": true
     }))
 }
 
@@ -212,227 +214,127 @@ pub async fn create_agent(request: serde_json::Value) -> Result<serde_json::Valu
 
 #[command]
 pub async fn update_agent_profile(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(request["request"].clone())
+    let req = &request["request"];
+    Ok(serde_json::json!({
+        "agentId": req["agentId"].as_str().unwrap_or("a0000000-0000-0000-0000-000000000001"),
+        "name": req["name"].as_str().unwrap_or("Claude Code"),
+        "engine": req["engine"].as_str().unwrap_or("claude-code"),
+        "brief": req["brief"].as_str().unwrap_or(""),
+        "defaultMode": req["defaultMode"].as_str().unwrap_or("fullAccess"),
+        "defaultPlan": req["defaultPlan"].as_bool().unwrap_or(true),
+        "defaultModel": null,
+        "defaultProviderOptions": [],
+        "memoryBudget": 4096,
+        "reflectionMode": "adaptive",
+        "allowAgentScheduling": true,
+        "confirmedByBuilder": true
+    }))
 }
 
 #[command]
-pub async fn delete_agent_profile(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn delete_agent_profile(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let agent_id = request["request"]["agentId"].as_str().unwrap_or("a0000000-0000-0000-0000-000000000001");
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "agentId": agent_id,
+        "deleted": true,
+        "cleanupPending": false
+    }))
 }
 
 #[command]
 pub async fn load_agent_mind(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let agent_id = request["request"]["agentId"].as_str().unwrap_or("default");
+    let agent_id = request["request"]["agentId"].as_str().unwrap_or("a0000000-0000-0000-0000-000000000001");
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "agentId": agent_id,
-        "memory": "Prefers modular TypeScript interfaces and clean Rust architecture.",
-        "user": "Lead Software Engineer",
+        "memory": "You are BridgeMind One, an autonomous engineering intelligence.",
+        "user": "Lead Engineer\nPreferences: clean Rust, modern React, rigorous testing.",
         "skills": [],
         "memoryUpdatedAtUnixMs": 1724457600000i64,
         "userUpdatedAtUnixMs": 1724457600000i64,
-        "memoryRevision": "rev-1",
-        "userRevision": "rev-1",
+        "memoryRevision": null,
+        "userRevision": null,
         "readIssues": []
     }))
 }
 
 #[command]
 pub async fn write_agent_memory(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let req = &request["request"];
-    Ok(serde_json::json!({
-        "schemaVersion": 1,
-        "agentId": req["agentId"].as_str().unwrap_or("default"),
-        "memory": req["memory"].as_str().unwrap_or(""),
-        "user": req.get("user").and_then(|u| u.as_str()).unwrap_or(""),
-        "skills": [],
-        "memoryUpdatedAtUnixMs": 1724457600000i64,
-        "userUpdatedAtUnixMs": 1724457600000i64,
-        "memoryRevision": "rev-2",
-        "userRevision": "rev-2",
-        "readIssues": []
-    }))
+    load_agent_mind(request).await
 }
 
 #[command]
 pub async fn load_agent_skill(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let req = &request["request"];
+    let skill_id = request["request"]["skillId"].as_str().unwrap_or("skill-001");
     Ok(serde_json::json!({
         "schemaVersion": 1,
-        "id": req["skillId"].as_str().unwrap_or("web-search"),
-        "name": "Web Search",
-        "description": "Searches the live web.",
-        "source": "",
-        "installed": true
+        "id": skill_id,
+        "name": "Rust Systems Architect",
+        "description": "Deep memory and optimization patterns for Rust & Tauri.",
+        "source": "# Rust Systems Architect\n\nExpert guidance on Tauri IPC."
     }))
 }
 
 #[command]
 pub async fn write_agent_skill(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(request["request"]["skill"].clone())
+    load_agent_mind(request).await
 }
 
 #[command]
-pub async fn remove_agent_skill(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn remove_agent_skill(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let mind = load_agent_mind(request).await?;
+    Ok(serde_json::json!({
+        "removed": true,
+        "mind": mind
+    }))
 }
 
 #[command]
 pub async fn list_agent_starters(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!([]))
+    Ok(serde_json::json!([
+        { "id": "code-review", "title": "Automated Code Reviewer", "summary": "Scans pull requests for security and architecture patterns." },
+        { "id": "doc-writer", "title": "Technical Documentation Generator", "summary": "Writes comprehensive markdown docs from source code." }
+    ]))
 }
 
 #[command]
-pub async fn install_agent_starter(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!({ "ok": true }))
+pub async fn install_agent_starter(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let mind = load_agent_mind(request).await?;
+    Ok(serde_json::json!({
+        "installed": true,
+        "mind": mind
+    }))
 }
 
 #[command]
 pub async fn get_agent_availability(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let engines = [
+        "claude-code", "codex", "gemini", "open-code", "github-copilot",
+        "cursor", "droid", "grok", "aider", "amp", "antigravity", "deep-seek"
+    ];
+    let teammates: Vec<serde_json::Value> = engines.iter().map(|e| {
+        serde_json::json!({
+            "engine": e,
+            "installed": true,
+            "verified": true
+        })
+    }).collect();
+
     Ok(serde_json::json!({
-        "scope": "system",
+        "schemaVersion": 1,
+        "scope": "native",
         "phase": "ready",
         "hasProbed": true,
-        "teammates": [
-            { "engine": "claude-code", "installed": true, "verified": true, "version": "0.2.29" },
-            { "engine": "codex", "installed": true, "verified": true, "version": "1.0.4" },
-            { "engine": "cursor", "installed": true, "verified": true, "version": "0.42.0" }
-        ]
+        "isLoading": false,
+        "teammates": teammates,
+        "issue": null
     }))
 }
 
 #[command]
-pub async fn probe_agent_availability(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    get_agent_availability(_request).await
-}
-
-// ---------------------------------------------------------------------------
-// Code Threads
-// ---------------------------------------------------------------------------
-
-#[command]
-pub async fn create_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let req = &request["request"];
-    Ok(serde_json::json!({
-        "schemaVersion": 1,
-        "id": uuid::Uuid::new_v4().to_string(),
-        "workspaceId": req["workspaceId"].as_str().unwrap_or("default"),
-        "title": "New Coding Thread",
-        "provider": req["provider"].as_str().unwrap_or("claude"),
-        "mode": req["mode"].as_str().unwrap_or("fullAccess"),
-        "plan": true,
-        "model": "claude-3-5-sonnet",
-        "providerOptions": {},
-        "items": [],
-        "status": "idle",
-        "isDraft": true,
-        "createdAtUnixMs": 1724457600000i64,
-        "updatedAtUnixMs": 1724457600000i64
-    }))
-}
-
-#[command]
-pub async fn read_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_code_thread(request).await
-}
-
-#[command]
-pub async fn configure_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_code_thread(request).await
-}
-
-#[command]
-pub async fn start_code_thread_turn(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!({ "ok": true }))
-}
-
-#[command]
-pub async fn read_code_thread_turn_updates(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!([]))
-}
-
-#[command]
-pub async fn stop_code_thread_turn(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn reset_code_thread(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn set_code_thread_visibility(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn delete_code_thread(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-// ---------------------------------------------------------------------------
-// General Chat Commands
-// ---------------------------------------------------------------------------
-
-#[command]
-pub async fn create_general_chat(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let req = &request["request"];
-    Ok(serde_json::json!({
-        "schemaVersion": 1,
-        "revision": "rev-1",
-        "id": uuid::Uuid::new_v4().to_string(),
-        "profileId": req.get("profileId").and_then(|p| p.as_str()),
-        "provider": "claude-code",
-        "title": "General Chat",
-        "items": [],
-        "mode": "fullAccess",
-        "plan": false,
-        "model": "claude-3-5-sonnet",
-        "status": "idle",
-        "createdAtUnixMs": 1724457600000i64,
-        "updatedAtUnixMs": 1724457600000i64
-    }))
-}
-
-#[command]
-pub async fn list_chat_summaries(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!([]))
-}
-
-#[command]
-pub async fn load_chat_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_general_chat(request).await
-}
-
-#[command]
-pub async fn rename_chat_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_general_chat(request).await
-}
-
-#[command]
-pub async fn update_chat_configuration(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_general_chat(request).await
-}
-
-#[command]
-pub async fn delete_chat_thread(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn start_chat_turn(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!({ "ok": true }))
-}
-
-#[command]
-pub async fn read_chat_turn_updates(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!([]))
-}
-
-#[command]
-pub async fn cancel_chat_turn(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn probe_agent_availability(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    get_agent_availability(request).await
 }
 
 // ---------------------------------------------------------------------------
@@ -441,102 +343,139 @@ pub async fn cancel_chat_turn(_request: serde_json::Value) -> Result<(), String>
 
 #[command]
 pub async fn list_routines(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!([]))
-}
-
-#[command]
-pub async fn create_routine(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let mut routine = request["request"].clone();
-    routine["id"] = serde_json::json!(uuid::Uuid::new_v4().to_string());
-    Ok(routine)
-}
-
-#[command]
-pub async fn update_routine(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(request["request"].clone())
-}
-
-#[command]
-pub async fn set_routine_enabled(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    Ok(request["request"].clone())
-}
-
-#[command]
-pub async fn delete_routine(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-// ---------------------------------------------------------------------------
-// Terminal PTY Commands
-// ---------------------------------------------------------------------------
-
-#[command]
-pub async fn start_terminal(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn write_terminal(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn read_terminal_output(_request: serde_json::Value) -> Result<String, String> {
-    Ok(String::new())
-}
-
-#[command]
-pub async fn resize_terminal(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-#[command]
-pub async fn terminate_terminal(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
-}
-
-// ---------------------------------------------------------------------------
-// Browser Surface Commands
-// ---------------------------------------------------------------------------
-
-#[command]
-pub async fn create_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    let req = &request["request"];
     Ok(serde_json::json!({
-        "surfaceId": uuid::Uuid::new_v4().to_string(),
-        "workspaceId": req["workspaceId"].as_str().unwrap_or("default"),
-        "url": req.get("url").and_then(|u| u.as_str()).unwrap_or("https://google.com"),
-        "title": "Web Browser",
-        "canGoBack": false,
-        "canGoForward": false,
-        "isLoading": false,
-        "zoomFactor": 1.0
+        "schemaVersion": 1,
+        "revision": 0,
+        "routines": [],
+        "readOnly": false,
+        "recoveryMessage": null
     }))
 }
 
 #[command]
-pub async fn read_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_browser_surface(request).await
+pub async fn create_routine(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    list_routines(_request).await
 }
 
 #[command]
-pub async fn navigate_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_browser_surface(request).await
+pub async fn update_routine(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    list_routines(_request).await
 }
 
 #[command]
-pub async fn control_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
-    create_browser_surface(request).await
+pub async fn set_routine_enabled(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    list_routines(_request).await
 }
 
 #[command]
-pub async fn update_browser_surface_presentation(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn delete_routine(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let snapshot = list_routines(_request).await?;
+    Ok(serde_json::json!({
+        "deleted": true,
+        "snapshot": snapshot
+    }))
+}
+
+// ---------------------------------------------------------------------------
+// Chat Commands
+// ---------------------------------------------------------------------------
+
+#[command]
+pub async fn list_chat_summaries(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "summaries": [],
+        "lastProvider": "claude-code",
+        "readOnly": false,
+        "skippedThreads": 0,
+        "recoveryMessage": null
+    }))
 }
 
 #[command]
-pub async fn close_browser_surface(_request: serde_json::Value) -> Result<(), String> {
-    Ok(())
+pub async fn create_general_chat(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let req = &request["request"];
+    let thread_id = uuid::Uuid::new_v4().to_string();
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "revision": 1,
+        "id": thread_id,
+        "profileId": null,
+        "provider": req["provider"].as_str().unwrap_or("claude-code"),
+        "title": "New Chat",
+        "items": [],
+        "mode": "fullAccess",
+        "plan": true,
+        "model": null,
+        "providerOptions": [],
+        "status": "idle",
+        "usage": { "inputTokens": 0, "outputTokens": 0 },
+        "createdAtUnixMs": 1724457600000i64,
+        "updatedAtUnixMs": 1724457600000i64
+    }))
+}
+
+#[command]
+pub async fn load_chat_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let thread_id = request["request"]["threadId"].as_str().unwrap_or("c0000000-0000-0000-0000-000000000001");
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "revision": 1,
+        "id": thread_id,
+        "profileId": null,
+        "provider": "claude-code",
+        "title": "Assistant Thread",
+        "items": [],
+        "mode": "fullAccess",
+        "plan": true,
+        "model": null,
+        "providerOptions": [],
+        "status": "idle",
+        "usage": { "inputTokens": 0, "outputTokens": 0 },
+        "createdAtUnixMs": 1724457600000i64,
+        "updatedAtUnixMs": 1724457600000i64
+    }))
+}
+
+#[command]
+pub async fn rename_chat_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    load_chat_thread(request).await
+}
+
+#[command]
+pub async fn update_chat_configuration(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    load_chat_thread(request).await
+}
+
+#[command]
+pub async fn delete_chat_thread(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({ "deleted": true }))
+}
+
+#[command]
+pub async fn start_chat_turn(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let thread = load_chat_thread(request).await?;
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "runId": uuid::Uuid::new_v4().to_string(),
+        "thread": thread
+    }))
+}
+
+#[command]
+pub async fn read_chat_turn_updates(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({
+        "resyncRequired": false,
+        "events": [],
+        "revision": 1,
+        "afterSequence": 0,
+        "nextSequence": 0
+    }))
+}
+
+#[command]
+pub async fn cancel_chat_turn(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({}))
 }
 
 // ---------------------------------------------------------------------------
@@ -547,16 +486,15 @@ pub async fn close_browser_surface(_request: serde_json::Value) -> Result<(), St
 pub async fn notifications_snapshot(_request: serde_json::Value) -> Result<serde_json::Value, String> {
     Ok(serde_json::json!({
         "schemaVersion": 1,
-        "revision": 1,
+        "revision": 0,
         "records": [],
         "unreadCount": 0,
         "openInputRequestCount": 0,
-        "authorization": "authorized",
-        "preferences": {
-            "osNotificationsEnabled": true,
-            "finishSoundEnabled": true,
-            "inputRequestsEnabled": true
-        }
+        "authorization": { "status": "authorized" },
+        "preferences": { "sounds": true, "badges": true },
+        "persistenceError": null,
+        "archiveReadOnly": false,
+        "openRecordId": null
     }))
 }
 
@@ -566,8 +504,8 @@ pub async fn notifications_poll(request: serde_json::Value) -> Result<serde_json
 }
 
 #[command]
-pub async fn notifications_report_attention(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-    notifications_snapshot(_request).await
+pub async fn notifications_report_attention(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    notifications_snapshot(request).await
 }
 
 #[command]
@@ -601,11 +539,170 @@ pub async fn notifications_refresh_authorization(request: serde_json::Value) -> 
 }
 
 #[command]
-pub async fn notifications_open_system_settings() -> Result<(), String> {
+pub async fn notifications_open_system_settings(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({}))
+}
+
+#[command]
+pub async fn notifications_play_sample(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({}))
+}
+
+// ---------------------------------------------------------------------------
+// Terminal PTY Commands
+// ---------------------------------------------------------------------------
+
+#[command]
+pub async fn start_terminal(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let session_id = request["request"]["sessionId"].as_str().unwrap_or("t0000000-0000-0000-0000-000000000001");
+    Ok(serde_json::json!({
+        "sessionId": session_id,
+        "cols": 80,
+        "rows": 24
+    }))
+}
+
+#[command]
+pub async fn write_terminal(_request: serde_json::Value) -> Result<(), String> {
     Ok(())
 }
 
 #[command]
-pub async fn notifications_play_sample() -> Result<(), String> {
+pub async fn resize_terminal(_request: serde_json::Value) -> Result<(), String> {
     Ok(())
+}
+
+#[command]
+pub async fn terminate_terminal(_request: serde_json::Value) -> Result<(), String> {
+    Ok(())
+}
+
+#[command]
+pub async fn read_terminal_output(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({
+        "data": ""
+    }))
+}
+
+// ---------------------------------------------------------------------------
+// Code Threads & Browser Surfaces
+// ---------------------------------------------------------------------------
+
+#[command]
+pub async fn create_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let thread_id = uuid::Uuid::new_v4().to_string();
+    let ws_id = request["request"]["workspaceId"].as_str().unwrap_or("w0000000-0000-0000-0000-000000000001");
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "revision": 1,
+        "owner": { "kind": "workspace", "workspaceId": ws_id },
+        "threadId": thread_id,
+        "provider": "claude-code",
+        "title": "Code Session",
+        "items": [],
+        "mode": "fullAccess",
+        "plan": true,
+        "model": null,
+        "providerOptions": [],
+        "status": "idle",
+        "usage": { "inputTokens": 0, "outputTokens": 0 },
+        "isDraft": false,
+        "visible": true,
+        "createdAtUnixMs": 1724457600000i64,
+        "updatedAtUnixMs": 1724457600000i64
+    }))
+}
+
+#[command]
+pub async fn read_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_code_thread(request).await
+}
+
+#[command]
+pub async fn configure_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_code_thread(request).await
+}
+
+#[command]
+pub async fn reset_code_thread(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_code_thread(request).await
+}
+
+#[command]
+pub async fn set_code_thread_visibility(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_code_thread(request).await
+}
+
+#[command]
+pub async fn delete_code_thread(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({ "deleted": true }))
+}
+
+#[command]
+pub async fn start_code_thread_turn(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let thread = create_code_thread(request).await?;
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "runId": uuid::Uuid::new_v4().to_string(),
+        "thread": thread
+    }))
+}
+
+#[command]
+pub async fn read_code_thread_turn_updates(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({
+        "resyncRequired": false,
+        "events": [],
+        "revision": 1,
+        "afterSequence": 0,
+        "nextSequence": 0
+    }))
+}
+
+#[command]
+pub async fn stop_code_thread_turn(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({ "stopping": true }))
+}
+
+#[command]
+pub async fn create_browser_surface(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    let surface_id = uuid::Uuid::new_v4().to_string();
+    Ok(serde_json::json!({
+        "schemaVersion": 1,
+        "surfaceId": surface_id,
+        "descriptorId": surface_id,
+        "revision": 1,
+        "displayUrl": "https://bridgemind.ai",
+        "transportSecurity": "secure",
+        "title": "BridgeMind Browser",
+        "loading": false,
+        "canGoBack": false,
+        "canGoForward": false,
+        "visible": true
+    }))
+}
+
+#[command]
+pub async fn read_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_browser_surface(request).await
+}
+
+#[command]
+pub async fn navigate_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_browser_surface(request).await
+}
+
+#[command]
+pub async fn control_browser_surface(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_browser_surface(request).await
+}
+
+#[command]
+pub async fn update_browser_surface_presentation(request: serde_json::Value) -> Result<serde_json::Value, String> {
+    create_browser_surface(request).await
+}
+
+#[command]
+pub async fn close_browser_surface(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({ "closed": true }))
 }
