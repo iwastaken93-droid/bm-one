@@ -241,6 +241,7 @@ export function shellReducer(state: ShellState, action: ShellAction): ShellState
         ...state,
         preferences: {
           ...state.preferences,
+          workMode: "code",
           route: { kind: "workspace" },
           selectedWorkspaceId: action.id
         }
@@ -252,6 +253,7 @@ export function shellReducer(state: ShellState, action: ShellAction): ShellState
         agentEditorOpen: false,
         preferences: {
           ...state.preferences,
+          workMode: "agent",
           route: { kind: "agent" },
           selectedAgentId: action.id
         }
