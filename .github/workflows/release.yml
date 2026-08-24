@@ -2,21 +2,23 @@ name: Release Desktop Application
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
   workflow_dispatch:
     inputs:
       version:
         description: "Release tag version (e.g. v1.0.0)"
-        required: true
+        required: false
         default: "v1.0.0"
 
 permissions:
   contents: write
 
 jobs:
-  build-tauri:
-    name: Build & Bundle (${{ matrix.platform }})
+  build-and-release:
+    name: Release Desktop (${{ matrix.platform }})
     strategy:
       fail-fast: false
       matrix:
@@ -62,10 +64,12 @@ jobs:
         id: vars
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
             echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=v1.0.0" >> $GITHUB_OUTPUT
           fi
 
       - name: Build Desktop Application and Create Release
