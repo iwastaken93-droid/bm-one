@@ -1,0 +1,1202 @@
+{
+  "schema_version": 1,
+  "source": {
+    "path": "bridgemind-one-rust.exe",
+    "sha256": "64f252f4b0bfc970add4c4a66f5f9e964f31fc8c82f1bcc3bd9b23ca73c2049c",
+    "file_size": 14981392,
+    "binary_kind": "pe",
+    "architecture": "X86_64"
+  },
+  "assets": [
+    {
+      "name": "/assets/logos/plugin-vercel-onLight.png",
+      "location": {
+        "header_offset": 12218728,
+        "name_offset": 11282608,
+        "data_offset": 11282647,
+        "data_size_offset": 12218752,
+        "original_compressed_size": 4116,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 4116,
+      "decompressed_size": 4523,
+      "compressed_sha256": "eeb99e843efa9abbb4029d0a3591341ebcbd6ca516935556e0e7baa869c3adbd"
+    },
+    {
+      "name": "/assets/logos/plugin-slack.png",
+      "location": {
+        "header_offset": 12218760,
+        "name_offset": 11286763,
+        "data_offset": 11286793,
+        "data_size_offset": 12218784,
+        "original_compressed_size": 13327,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 13327,
+      "decompressed_size": 13460,
+      "compressed_sha256": "b8a292495c1fdd9f882e46273f8e8ea96b7f8d26e95baab31ad61ff89fd6fe58"
+    },
+    {
+      "name": "/assets/core-CYtF6UP-.js",
+      "location": {
+        "header_offset": 12218792,
+        "name_offset": 11300120,
+        "data_offset": 11300144,
+        "data_size_offset": 12218816,
+        "original_compressed_size": 477,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 477,
+      "decompressed_size": 1077,
+      "compressed_sha256": "a1874cc275974e81d120106f87a8245a5d6f4db8ed7da0a235574cee8eadeb79"
+    },
+    {
+      "name": "/assets/logos/plugin-sentry-onLight.png",
+      "location": {
+        "header_offset": 12218824,
+        "name_offset": 11300621,
+        "data_offset": 11300660,
+        "data_size_offset": 12218848,
+        "original_compressed_size": 13885,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 13885,
+      "decompressed_size": 14327,
+      "compressed_sha256": "9787abe535ab46bd2d1aca823f9914199a4d78607064b9977bd5d5500711e0b8"
+    },
+    {
+      "name": "/assets/logos/plugin-apollo.png",
+      "location": {
+        "header_offset": 12218856,
+        "name_offset": 11314545,
+        "data_offset": 11314576,
+        "data_size_offset": 12218880,
+        "original_compressed_size": 20768,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 20768,
+      "decompressed_size": 20800,
+      "compressed_sha256": "6aa60359b3033310d18942cb5171b4eca971fdeadc8fbfe9c824fd64ddc83c97"
+    },
+    {
+      "name": "/assets/logos/plugin-fal-onLight.png",
+      "location": {
+        "header_offset": 12218888,
+        "name_offset": 11335344,
+        "data_offset": 11335380,
+        "data_size_offset": 12218912,
+        "original_compressed_size": 7809,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7809,
+      "decompressed_size": 7859,
+      "compressed_sha256": "45f1afed9a566a86854fc2cc13aaf886712b2cc3c2f8e3c8bdd1494d8901ca25"
+    },
+    {
+      "name": "/assets/logos/plugin-x-onLight.png",
+      "location": {
+        "header_offset": 12218920,
+        "name_offset": 11343189,
+        "data_offset": 11343223,
+        "data_size_offset": 12218944,
+        "original_compressed_size": 6329,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 6329,
+      "decompressed_size": 6520,
+      "compressed_sha256": "4a342e87491a8de57d423a07ba57161ce76a7844f3a6f3552328e84cb919fa6e"
+    },
+    {
+      "name": "/assets/logos/plugin-cloudflare-onLight.png",
+      "location": {
+        "header_offset": 12218952,
+        "name_offset": 11349552,
+        "data_offset": 11349595,
+        "data_size_offset": 12218976,
+        "original_compressed_size": 5103,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 5103,
+      "decompressed_size": 5362,
+      "compressed_sha256": "9a22906aca51e308a87cda4b916f24fc2fd60ddbf0056331c07a7e99270e5bf1"
+    },
+    {
+      "name": "/assets/logos/plugin-x-onDark.png",
+      "location": {
+        "header_offset": 12218984,
+        "name_offset": 11354698,
+        "data_offset": 11354731,
+        "data_size_offset": 12219008,
+        "original_compressed_size": 6970,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 6970,
+      "decompressed_size": 7153,
+      "compressed_sha256": "39e96ad805c15e37ad92c1c6bb6e2e1da149bb84f418298deafda1523c670d35"
+    },
+    {
+      "name": "/assets/logos/plugin-vidiq.png",
+      "location": {
+        "header_offset": 12219016,
+        "name_offset": 11361701,
+        "data_offset": 11361731,
+        "data_size_offset": 12219040,
+        "original_compressed_size": 13435,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 13435,
+      "decompressed_size": 13506,
+      "compressed_sha256": "5c93ec1d6a8d8a1fd5291b251461b6a600c4dc0e49a5e4b3a6253c35b61ac465"
+    },
+    {
+      "name": "/assets/bridge-mind-symbol.png",
+      "location": {
+        "header_offset": 12219048,
+        "name_offset": 11375166,
+        "data_offset": 11375196,
+        "data_size_offset": 12219072,
+        "original_compressed_size": 10652,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 10652,
+      "decompressed_size": 10680,
+      "compressed_sha256": "c930a176a90b851f7d523d6d60388bde6b187e4d218f023b7fea200f9df567be"
+    },
+    {
+      "name": "/assets/logos/agent-opencode-onLight.png",
+      "location": {
+        "header_offset": 12219080,
+        "name_offset": 11385848,
+        "data_offset": 11385888,
+        "data_size_offset": 12219104,
+        "original_compressed_size": 523,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 523,
+      "decompressed_size": 1271,
+      "compressed_sha256": "55057d5d0f875c07f77b734620f9f95093d6ba0889bc156dbbb4f52e0aa825d9"
+    },
+    {
+      "name": "/assets/logos/agent-aider-onDark.png",
+      "location": {
+        "header_offset": 12219112,
+        "name_offset": 11386411,
+        "data_offset": 11386447,
+        "data_size_offset": 12219136,
+        "original_compressed_size": 5611,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 5611,
+      "decompressed_size": 5807,
+      "compressed_sha256": "999a64a7f9486a6fea8fbac0b8179517f46f3de74d4fdcaaa3c99e44cdc27749"
+    },
+    {
+      "name": "/assets/logos/plugin-resend-onDark.png",
+      "location": {
+        "header_offset": 12219144,
+        "name_offset": 11392058,
+        "data_offset": 11392096,
+        "data_size_offset": 12219168,
+        "original_compressed_size": 6064,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 6064,
+      "decompressed_size": 6305,
+      "compressed_sha256": "ce133aee192ce53eb443fde02c19306e6869595f332d46a3d63682a6cf00aa62"
+    },
+    {
+      "name": "/assets/logos/agent-gemini-onLight.png",
+      "location": {
+        "header_offset": 12219176,
+        "name_offset": 11398160,
+        "data_offset": 11398198,
+        "data_size_offset": 12219200,
+        "original_compressed_size": 4776,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 4776,
+      "decompressed_size": 4801,
+      "compressed_sha256": "36a577d85b5915745f45a25cdbde5f6e226308ef5d089d100735e4f37e0e4379"
+    },
+    {
+      "name": "/assets/logos/plugin-notion-onDark.png",
+      "location": {
+        "header_offset": 12219208,
+        "name_offset": 11402974,
+        "data_offset": 11403012,
+        "data_size_offset": 12219232,
+        "original_compressed_size": 9912,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 9912,
+      "decompressed_size": 10179,
+      "compressed_sha256": "3ef328748210fb6d434e3bee22b55c63fd6a8015ca02545f2ccadfbbc9cb3615"
+    },
+    {
+      "name": "/assets/logos/plugin-linear-onLight.png",
+      "location": {
+        "header_offset": 12219240,
+        "name_offset": 11412924,
+        "data_offset": 11412963,
+        "data_size_offset": 12219264,
+        "original_compressed_size": 8987,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 8987,
+      "decompressed_size": 9043,
+      "compressed_sha256": "d24b16b1ec02064a7902d0471374328e42bc8a9658169126760bb89322260fc8"
+    },
+    {
+      "name": "/assets/logos/agent-deepseek.png",
+      "location": {
+        "header_offset": 12219272,
+        "name_offset": 11421950,
+        "data_offset": 11421982,
+        "data_size_offset": 12219296,
+        "original_compressed_size": 12862,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 12862,
+      "decompressed_size": 13146,
+      "compressed_sha256": "f1e06742bb9272e5101f1641d41f7a93f2aed174d0075c6f6cf9fa6c535ae883"
+    },
+    {
+      "name": "/assets/logos/plugin-fal-onDark.png",
+      "location": {
+        "header_offset": 12219304,
+        "name_offset": 11434844,
+        "data_offset": 11434879,
+        "data_size_offset": 12219328,
+        "original_compressed_size": 11422,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 11422,
+      "decompressed_size": 11468,
+      "compressed_sha256": "2ca43fd9c91e99ff7e293d5fff4e31adc94b96b196087a760b6ba66d130468d2"
+    },
+    {
+      "name": "/assets/logos/agent-antigravity.png",
+      "location": {
+        "header_offset": 12219336,
+        "name_offset": 11446301,
+        "data_offset": 11446336,
+        "data_size_offset": 12219360,
+        "original_compressed_size": 54966,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 54966,
+      "decompressed_size": 55093,
+      "compressed_sha256": "183afd87c248549659553f6487f757f19f93026f4c6ebeed34827b38bb937685"
+    },
+    {
+      "name": "/index.html",
+      "location": {
+        "header_offset": 12219368,
+        "name_offset": 11501302,
+        "data_offset": 11501313,
+        "data_size_offset": 12219392,
+        "original_compressed_size": 244,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 244,
+      "decompressed_size": 541,
+      "compressed_sha256": "0559d9bb7bd4a0e72179ab140209c2814b56a1ab07fac55d8ef264af61fb6088"
+    },
+    {
+      "name": "/assets/index-CG8qcx-u.js",
+      "location": {
+        "header_offset": 12219400,
+        "name_offset": 11501557,
+        "data_offset": 11501582,
+        "data_size_offset": 12219424,
+        "original_compressed_size": 150640,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 150640,
+      "decompressed_size": 619763,
+      "compressed_sha256": "ecebba0042a5f000d55ae7736c53e890916813d9b5cb6a3bff6cdddfe916d93f"
+    },
+    {
+      "name": "/assets/logos/plugin-higgsfield-onLight.png",
+      "location": {
+        "header_offset": 12219432,
+        "name_offset": 11652222,
+        "data_offset": 11652265,
+        "data_size_offset": 12219456,
+        "original_compressed_size": 11616,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 11616,
+      "decompressed_size": 11776,
+      "compressed_sha256": "e97230456cbde164679d8615bd68cbc936e5a29ee55d30aba77c7a8f5fdf7fcf"
+    },
+    {
+      "name": "/assets/logos/plugin-googleads.png",
+      "location": {
+        "header_offset": 12219464,
+        "name_offset": 11663881,
+        "data_offset": 11663915,
+        "data_size_offset": 12219488,
+        "original_compressed_size": 8091,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 8091,
+      "decompressed_size": 8200,
+      "compressed_sha256": "e6d18263b0d8a4de798f7c2d322d55ce7a02b9b1eed8e34e428d52bcff4736f9"
+    },
+    {
+      "name": "/assets/logos/agent-codex-onLight.png",
+      "location": {
+        "header_offset": 12219496,
+        "name_offset": 11672006,
+        "data_offset": 11672043,
+        "data_size_offset": 12219520,
+        "original_compressed_size": 12593,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 12593,
+      "decompressed_size": 12680,
+      "compressed_sha256": "b1af0839507add2159dfe1e1d32bfda330355c1014c9cfbd7b28af3f187d0123"
+    },
+    {
+      "name": "/assets/logos/plugin-metaads-onDark.png",
+      "location": {
+        "header_offset": 12219528,
+        "name_offset": 11684636,
+        "data_offset": 11684675,
+        "data_size_offset": 12219552,
+        "original_compressed_size": 7647,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7647,
+      "decompressed_size": 7829,
+      "compressed_sha256": "0fb4778c4caf6b51af020994fc852a690beb3c3614ecdd5fad1b0005cae35f11"
+    },
+    {
+      "name": "/assets/logos/plugin-unity-onDark.png",
+      "location": {
+        "header_offset": 12219560,
+        "name_offset": 11692322,
+        "data_offset": 11692359,
+        "data_size_offset": 12219584,
+        "original_compressed_size": 6881,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 6881,
+      "decompressed_size": 7057,
+      "compressed_sha256": "bb13f7264c397c7fc82a1fc27a165cbc132c1f841ee92bb6b08a5271c50a834a"
+    },
+    {
+      "name": "/assets/logos/agent-droid-onDark.png",
+      "location": {
+        "header_offset": 12219592,
+        "name_offset": 11699240,
+        "data_offset": 11699276,
+        "data_size_offset": 12219616,
+        "original_compressed_size": 17018,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 17018,
+      "decompressed_size": 17089,
+      "compressed_sha256": "9ff6eef015b7a6cad6ff808288e93ec20564a649e7465ba4c1a2e3cd35ef99e1"
+    },
+    {
+      "name": "/assets/logos/plugin-unreal-onDark.png",
+      "location": {
+        "header_offset": 12219624,
+        "name_offset": 11716294,
+        "data_offset": 11716332,
+        "data_size_offset": 12219648,
+        "original_compressed_size": 12315,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 12315,
+      "decompressed_size": 12423,
+      "compressed_sha256": "9186581d8c53b0fde8220ef4e39bffd21616f2a9d7d9e58f0a34185bf8a48395"
+    },
+    {
+      "name": "/assets/logos/plugin-higgsfield-onDark.png",
+      "location": {
+        "header_offset": 12219656,
+        "name_offset": 11728647,
+        "data_offset": 11728689,
+        "data_size_offset": 12219680,
+        "original_compressed_size": 16918,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 16918,
+      "decompressed_size": 17077,
+      "compressed_sha256": "1c43866a593239afee6d0216f80acd7a23683a0e46013ecc4aa18a0e57f5987f"
+    },
+    {
+      "name": "/assets/window-BRnMpaqH.js",
+      "location": {
+        "header_offset": 12219688,
+        "name_offset": 11745607,
+        "data_offset": 11745633,
+        "data_size_offset": 12219712,
+        "original_compressed_size": 3301,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 3301,
+      "decompressed_size": 14184,
+      "compressed_sha256": "4c64963eb93df75386a91c4d895df61dfd93939bf7218ce3b4dc9444622477fd"
+    },
+    {
+      "name": "/assets/logos/plugin-gmail.png",
+      "location": {
+        "header_offset": 12219720,
+        "name_offset": 11748934,
+        "data_offset": 11748964,
+        "data_size_offset": 12219744,
+        "original_compressed_size": 7140,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7140,
+      "decompressed_size": 7653,
+      "compressed_sha256": "254eb566de329be457a601d8a27d9b03ccaa6d97a856a847f63069bd1fecaff9"
+    },
+    {
+      "name": "/assets/logos/plugin-revenuecat-onDark.png",
+      "location": {
+        "header_offset": 12219752,
+        "name_offset": 11756104,
+        "data_offset": 11756146,
+        "data_size_offset": 12219776,
+        "original_compressed_size": 9251,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 9251,
+      "decompressed_size": 9525,
+      "compressed_sha256": "9929ed7e48b71ab36dd0ea82e46acf35711670487945fb4eb7d9b1aa00362f7d"
+    },
+    {
+      "name": "/assets/logos/agent-grok-onLight.png",
+      "location": {
+        "header_offset": 12219784,
+        "name_offset": 11765397,
+        "data_offset": 11765433,
+        "data_size_offset": 12219808,
+        "original_compressed_size": 4499,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 4499,
+      "decompressed_size": 4635,
+      "compressed_sha256": "924d99c3241ad3c30fdecea333357b5e1be94ad9b838f1d263b4889c87e2e135"
+    },
+    {
+      "name": "/assets/logos/agent-droid-onLight.png",
+      "location": {
+        "header_offset": 12219816,
+        "name_offset": 11769932,
+        "data_offset": 11769969,
+        "data_size_offset": 12219840,
+        "original_compressed_size": 15409,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 15409,
+      "decompressed_size": 15470,
+      "compressed_sha256": "d16c46d2ef71364b552ae15a1ecf71b0ccb298b4b3bd3cb5dab69b7818bef851"
+    },
+    {
+      "name": "/assets/logos/agent-amp.png",
+      "location": {
+        "header_offset": 12219848,
+        "name_offset": 11785378,
+        "data_offset": 11785405,
+        "data_size_offset": 12219872,
+        "original_compressed_size": 59376,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 59376,
+      "decompressed_size": 59372,
+      "compressed_sha256": "d64e80dcd37d7cf439d413cdb1deeb97807a0eccd8fd94b2e6f57a8b53887f1e"
+    },
+    {
+      "name": "/assets/logos/plugin-shopify-onLight.png",
+      "location": {
+        "header_offset": 12219880,
+        "name_offset": 11844781,
+        "data_offset": 11844821,
+        "data_size_offset": 12219904,
+        "original_compressed_size": 12430,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 12430,
+      "decompressed_size": 12590,
+      "compressed_sha256": "788268df5fab06b2d0a1c51cbe4f9dbf17742ab7a5cc9a902bb2c08dda14d72a"
+    },
+    {
+      "name": "/assets/logos/plugin-linear-onDark.png",
+      "location": {
+        "header_offset": 12219912,
+        "name_offset": 11857251,
+        "data_offset": 11857289,
+        "data_size_offset": 12219936,
+        "original_compressed_size": 15070,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 15070,
+      "decompressed_size": 15161,
+      "compressed_sha256": "f4e3ec6c02fe0c494b0d51918a565150b439c668e05b2cfe5a3898cdad14decd"
+    },
+    {
+      "name": "/assets/dist-js-B60BXFTn.js",
+      "location": {
+        "header_offset": 12219944,
+        "name_offset": 11872359,
+        "data_offset": 11872386,
+        "data_size_offset": 12219968,
+        "original_compressed_size": 131,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 131,
+      "decompressed_size": 171,
+      "compressed_sha256": "a0e9b476444b5ebf12f6664632d667c820560551ec3444fa7f182a4683cd9a10"
+    },
+    {
+      "name": "/assets/logos/plugin-youtube.png",
+      "location": {
+        "header_offset": 12219976,
+        "name_offset": 11872517,
+        "data_offset": 11872549,
+        "data_size_offset": 12220000,
+        "original_compressed_size": 5175,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 5175,
+      "decompressed_size": 5410,
+      "compressed_sha256": "4d5a19470a3900d7d57878b7f886746d6211adb3480c06ceb4d1d5653e8b144a"
+    },
+    {
+      "name": "/assets/logos/plugin-shopify-onDark.png",
+      "location": {
+        "header_offset": 12220008,
+        "name_offset": 11877724,
+        "data_offset": 11877763,
+        "data_size_offset": 12220032,
+        "original_compressed_size": 19366,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 19366,
+      "decompressed_size": 19498,
+      "compressed_sha256": "85fbac39751a4ec8b2d8b776a3c85c2426e5c32d8767917fee2daa1387bcf163"
+    },
+    {
+      "name": "/assets/logos/plugin-supabase-onDark.png",
+      "location": {
+        "header_offset": 12220040,
+        "name_offset": 11897129,
+        "data_offset": 11897169,
+        "data_size_offset": 12220064,
+        "original_compressed_size": 7131,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7131,
+      "decompressed_size": 7264,
+      "compressed_sha256": "37d953711a5b63c9ef5e2428823bdc4b63fb071ec255cd7bcf38a69d90d3ff09"
+    },
+    {
+      "name": "/assets/logos/plugin-unreal-onLight.png",
+      "location": {
+        "header_offset": 12220072,
+        "name_offset": 11904300,
+        "data_offset": 11904339,
+        "data_size_offset": 12220096,
+        "original_compressed_size": 13494,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 13494,
+      "decompressed_size": 13596,
+      "compressed_sha256": "9a3080fd39195d7fbdc6ec08dc08d80ad95b97c12dabde4fc59e3688f4a9e439"
+    },
+    {
+      "name": "/assets/index-CPStg5sp.css",
+      "location": {
+        "header_offset": 12220104,
+        "name_offset": 11917833,
+        "data_offset": 11917859,
+        "data_size_offset": 12220128,
+        "original_compressed_size": 14049,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 14049,
+      "decompressed_size": 97699,
+      "compressed_sha256": "8b3e562e07601c2423bb9f54e14003983d43886efde8d24be126591bd2b36f13"
+    },
+    {
+      "name": "/assets/logos/plugin-metaads-onLight.png",
+      "location": {
+        "header_offset": 12220136,
+        "name_offset": 11931908,
+        "data_offset": 11931948,
+        "data_size_offset": 12220160,
+        "original_compressed_size": 9990,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 9990,
+      "decompressed_size": 10181,
+      "compressed_sha256": "06e63cac15c364c7d1094be397dd8c5f638cc3ed208722cc2ab9c4edf3013d0b"
+    },
+    {
+      "name": "/assets/logos/agent-aider-onLight.png",
+      "location": {
+        "header_offset": 12220168,
+        "name_offset": 11941938,
+        "data_offset": 11941975,
+        "data_size_offset": 12220192,
+        "original_compressed_size": 5265,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 5265,
+      "decompressed_size": 5412,
+      "compressed_sha256": "d8f89d98af628018958620f2565deb69376e802db5754b512595e9fe0753be89"
+    },
+    {
+      "name": "/assets/logos/plugin-github-onLight.png",
+      "location": {
+        "header_offset": 12220200,
+        "name_offset": 11947240,
+        "data_offset": 11947279,
+        "data_size_offset": 12220224,
+        "original_compressed_size": 9969,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 9969,
+      "decompressed_size": 10068,
+      "compressed_sha256": "b4176b31288a57251a7617bca9826665404c7ab36cfba7b276374e542b793897"
+    },
+    {
+      "name": "/assets/logos/agent-cursor-onLight.png",
+      "location": {
+        "header_offset": 12220232,
+        "name_offset": 11957248,
+        "data_offset": 11957286,
+        "data_size_offset": 12220256,
+        "original_compressed_size": 7198,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7198,
+      "decompressed_size": 7302,
+      "compressed_sha256": "8470cc26deba398774243677af0c615663a648fc3c4ab7be28ac32d16ada8f59"
+    },
+    {
+      "name": "/assets/logos/plugin-stripe-onDark.png",
+      "location": {
+        "header_offset": 12220264,
+        "name_offset": 11964484,
+        "data_offset": 11964522,
+        "data_size_offset": 12220288,
+        "original_compressed_size": 9724,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 9724,
+      "decompressed_size": 9799,
+      "compressed_sha256": "32ae137afd469e36a0d20ccb16c140b32f338d367c7c544fb2ff42cca10f926b"
+    },
+    {
+      "name": "/assets/logos/agent-copilot-onDark.png",
+      "location": {
+        "header_offset": 12220296,
+        "name_offset": 11974246,
+        "data_offset": 11974284,
+        "data_size_offset": 12220320,
+        "original_compressed_size": 11978,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 11978,
+      "decompressed_size": 12259,
+      "compressed_sha256": "4938c1214a71e58d440a99f8579288f42b9893201ef10b0a764ba688555b09aa"
+    },
+    {
+      "name": "/assets/logos/agent-claude.png",
+      "location": {
+        "header_offset": 12220328,
+        "name_offset": 11986262,
+        "data_offset": 11986292,
+        "data_size_offset": 12220352,
+        "original_compressed_size": 20325,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 20325,
+      "decompressed_size": 20411,
+      "compressed_sha256": "65c077dbf708cb97ad0655a0fb1681da94b193789aefb80bf565dfad0399d739"
+    },
+    {
+      "name": "/assets/logos/plugin-supabase-onLight.png",
+      "location": {
+        "header_offset": 12220360,
+        "name_offset": 12006617,
+        "data_offset": 12006658,
+        "data_size_offset": 12220384,
+        "original_compressed_size": 4836,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 4836,
+      "decompressed_size": 4940,
+      "compressed_sha256": "83e4c1ad426b3567408b0de20e92418e957595a914b7cb44311a4f864a5ecc1b"
+    },
+    {
+      "name": "/assets/logos/agent-codex-onDark.png",
+      "location": {
+        "header_offset": 12220392,
+        "name_offset": 12011494,
+        "data_offset": 12011530,
+        "data_size_offset": 12220416,
+        "original_compressed_size": 13719,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 13719,
+      "decompressed_size": 13815,
+      "compressed_sha256": "f21061c7dee66c012ff81763100a3c3819e34006b547d6effe3c0823ed4df2fe"
+    },
+    {
+      "name": "/assets/XtermSurface-DrAkY-46.js",
+      "location": {
+        "header_offset": 12220424,
+        "name_offset": 12025249,
+        "data_offset": 12025281,
+        "data_size_offset": 12220448,
+        "original_compressed_size": 77021,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 77021,
+      "decompressed_size": 335343,
+      "compressed_sha256": "9df75ceb76612cf26df02117acf8bb1f0b760677ccc4d6c8c023ffdfe8e254f8"
+    },
+    {
+      "name": "/assets/logos/plugin-notion-onLight.png",
+      "location": {
+        "header_offset": 12220456,
+        "name_offset": 12102302,
+        "data_offset": 12102341,
+        "data_size_offset": 12220480,
+        "original_compressed_size": 10910,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 10910,
+      "decompressed_size": 11232,
+      "compressed_sha256": "7ccf7b33b240954ac8c9a92a60af84008e6110f5cff0d4aed773921caa48ae54"
+    },
+    {
+      "name": "/assets/logos/plugin-cloudflare-onDark.png",
+      "location": {
+        "header_offset": 12220488,
+        "name_offset": 12113251,
+        "data_offset": 12113293,
+        "data_size_offset": 12220512,
+        "original_compressed_size": 7737,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7737,
+      "decompressed_size": 8050,
+      "compressed_sha256": "638094d91ad676a6db49c79a170e8d45c9aa8b70969198456792c4288ed10883"
+    },
+    {
+      "name": "/assets/logos/agent-cursor-onDark.png",
+      "location": {
+        "header_offset": 12220520,
+        "name_offset": 12121030,
+        "data_offset": 12121067,
+        "data_size_offset": 12220544,
+        "original_compressed_size": 7616,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7616,
+      "decompressed_size": 7759,
+      "compressed_sha256": "969645ca87ffb845d621e15f53744bda254ae309b96784642e7dee331a523373"
+    },
+    {
+      "name": "/assets/logos/plugin-revenuecat-onLight.png",
+      "location": {
+        "header_offset": 12220552,
+        "name_offset": 12128683,
+        "data_offset": 12128726,
+        "data_size_offset": 12220576,
+        "original_compressed_size": 12447,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 12447,
+      "decompressed_size": 12741,
+      "compressed_sha256": "16211ea7551a049e189706830ad919c461a8faa61f3fcb7b8124cbe8545d14d4"
+    },
+    {
+      "name": "/assets/logos/plugin-unity-onLight.png",
+      "location": {
+        "header_offset": 12220584,
+        "name_offset": 12141173,
+        "data_offset": 12141211,
+        "data_size_offset": 12220608,
+        "original_compressed_size": 7660,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7660,
+      "decompressed_size": 7828,
+      "compressed_sha256": "f1896f01fdd88e66bacfa8f6275468eb5caf0188a80e55f9f4172bb20f6b479f"
+    },
+    {
+      "name": "/assets/logos/plugin-blender.png",
+      "location": {
+        "header_offset": 12220616,
+        "name_offset": 12148871,
+        "data_offset": 12148903,
+        "data_size_offset": 12220640,
+        "original_compressed_size": 12979,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 12979,
+      "decompressed_size": 13157,
+      "compressed_sha256": "3a7c3e8bf3b596010fde45736725093ddb0d2a869b2ad791e91de1a90664576d"
+    },
+    {
+      "name": "/assets/logos/plugin-sentry-onDark.png",
+      "location": {
+        "header_offset": 12220648,
+        "name_offset": 12161882,
+        "data_offset": 12161920,
+        "data_size_offset": 12220672,
+        "original_compressed_size": 8664,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 8664,
+      "decompressed_size": 9049,
+      "compressed_sha256": "7262c6e4392f4d5060a074f80355c73b9592638e4a5b2232a32b979d7bba000b"
+    },
+    {
+      "name": "/assets/logos/plugin-resend-onLight.png",
+      "location": {
+        "header_offset": 12220680,
+        "name_offset": 12170584,
+        "data_offset": 12170623,
+        "data_size_offset": 12220704,
+        "original_compressed_size": 4531,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 4531,
+      "decompressed_size": 4816,
+      "compressed_sha256": "8ea4a4add634c00aebd78b994a3994735a7c6166df6f453f5f5bf251da1c9433"
+    },
+    {
+      "name": "/assets/logos/plugin-vercel-onDark.png",
+      "location": {
+        "header_offset": 12220712,
+        "name_offset": 12175154,
+        "data_offset": 12175192,
+        "data_size_offset": 12220736,
+        "original_compressed_size": 4695,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 4695,
+      "decompressed_size": 5067,
+      "compressed_sha256": "c5fa2e0b93fb758eb537df6beaca2afe73e3a1e2336cc0b0f1348b3ebf03e094"
+    },
+    {
+      "name": "/assets/logos/agent-gemini-onDark.png",
+      "location": {
+        "header_offset": 12220744,
+        "name_offset": 12179887,
+        "data_offset": 12179924,
+        "data_size_offset": 12220768,
+        "original_compressed_size": 5008,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 5008,
+      "decompressed_size": 5035,
+      "compressed_sha256": "7b0ffdc2b282a35ffc6ceb582d3bfbc8c910316ae9a03e02b467c3dbd29bef5f"
+    },
+    {
+      "name": "/assets/logos/plugin-github-onDark.png",
+      "location": {
+        "header_offset": 12220776,
+        "name_offset": 12184932,
+        "data_offset": 12184970,
+        "data_size_offset": 12220800,
+        "original_compressed_size": 9090,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 9090,
+      "decompressed_size": 9156,
+      "compressed_sha256": "6048407579c9615c67df677f8537e183cd8fcf013d6b0f6a3e96151149f11afb"
+    },
+    {
+      "name": "/assets/logos/plugin-stripe-onLight.png",
+      "location": {
+        "header_offset": 12220808,
+        "name_offset": 12194060,
+        "data_offset": 12194099,
+        "data_size_offset": 12220832,
+        "original_compressed_size": 7339,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 7339,
+      "decompressed_size": 7405,
+      "compressed_sha256": "85d4073c6574a0f0b648a402dc60f2662fba2830320d5770347b473bbfd93358"
+    },
+    {
+      "name": "/assets/logos/agent-copilot-onLight.png",
+      "location": {
+        "header_offset": 12220840,
+        "name_offset": 12201438,
+        "data_offset": 12201477,
+        "data_size_offset": 12220864,
+        "original_compressed_size": 10689,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 10689,
+      "decompressed_size": 10981,
+      "compressed_sha256": "875d59b3e22eb4c33a890423bb5d44b0758287dfdc887126d4eef0b48793683c"
+    },
+    {
+      "name": "/assets/logos/agent-opencode-onDark.png",
+      "location": {
+        "header_offset": 12220872,
+        "name_offset": 12212166,
+        "data_offset": 12212205,
+        "data_size_offset": 12220896,
+        "original_compressed_size": 569,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 569,
+      "decompressed_size": 1298,
+      "compressed_sha256": "f6075baac37918c051520d366b50c70f034c6c95a8f0a8c4bd50b5f88c752857"
+    },
+    {
+      "name": "/assets/logos/agent-grok-onDark.png",
+      "location": {
+        "header_offset": 12220904,
+        "name_offset": 12212774,
+        "data_offset": 12212809,
+        "data_size_offset": 12220928,
+        "original_compressed_size": 5015,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 5015,
+      "decompressed_size": 5135,
+      "compressed_sha256": "27ffd2a8a5fb5a91e77375e39f7593beef0de145adca76b73caed3cc93f0e8e8"
+    },
+    {
+      "name": "/assets/XtermSurface-BrP-ENHg.css",
+      "location": {
+        "header_offset": 12220936,
+        "name_offset": 12217824,
+        "data_offset": 12217857,
+        "data_size_offset": 12220960,
+        "original_compressed_size": 865,
+        "scan_range": {
+          "start": 11141120,
+          "length": 3468836
+        }
+      },
+      "original_compressed_size": 865,
+      "decompressed_size": 3939,
+      "compressed_sha256": "55755e7accbc04c46d0c66b3bef32db3cd8bd069cdb70605cfc3f934f29bd155"
+    }
+  ]
+}

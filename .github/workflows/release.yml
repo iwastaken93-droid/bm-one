@@ -1,0 +1,74 @@
+name: Release Desktop Application
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-tauri:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "windows-latest"
+            target: "x86_64-pc-windows-msvc"
+          - platform: "ubuntu-22.04"
+            target: "x86_64-unknown-linux-gnu"
+          - platform: "macos-latest"
+            target: "x86_64-apple-darwin"
+          - platform: "macos-latest"
+            target: "aarch64-apple-darwin"
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux system dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: Build Frontend
+        run: npm run build
+
+      - name: Build Desktop Application and Create Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "BridgeMind One ${{ github.ref_name }}"
+          releaseBody: |
+            ## BridgeMind One Desktop Release (${{ github.ref_name }})
+            
+            ### ✨ Features Included:
+            - **13 AI Agent Drivers:** Claude Code, Codex CLI, Cursor Agent, Gemini CLI, Copilot, Droid, OpenCode, DeepSeek, Grok Build, Amp, Antigravity, Aider, and Terminal PTY.
+            - **24 Ecosystem Plugins:** GitHub, Vercel, Supabase, Cloudflare, Linear, Notion, Stripe, Unreal Engine, Unity, Blender, etc.
+            - **Workspace Studio:** Recursive tiling split-pane layout manager with integrated ConPTY shell and WebView2 browser surfaces.
+            - **Multi-Turn Assistant Chat & Token Accounting.**
+            - **Scheduled Routines & Background Cron Jobs.**
+          releaseDraft: true
+          prerelease: false
+          args: --target ${{ matrix.target }}

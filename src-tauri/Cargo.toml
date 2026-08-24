@@ -1,0 +1,38 @@
+[package]
+name = "bridgemind-one-rust"
+version = "1.0.0"
+description = "BridgeMind One — AI Agent Workspace & Multi-Engine Coding Harness"
+authors = ["BridgeMind"]
+edition = "2021"
+
+[lib]
+name = "bridgemind_one_rust_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.5", features = [] }
+
+[dependencies]
+tauri = { version = "2.1.1", features = ["tray-icon"] }
+tauri-plugin-dialog = "2.0.1"
+tauri-plugin-window-state = "2.0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.40", features = ["full"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+uuid = { version = "1.10", features = ["v4", "serde"] }
+jiff = "0.1"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+rustls = "0.23"
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+zeroize = "1.8"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_Security_Credentials",
+    "Win32_System_Console",
+    "Win32_System_Pipes"
+] }
