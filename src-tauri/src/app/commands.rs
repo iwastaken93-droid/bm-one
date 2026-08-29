@@ -6,6 +6,8 @@ pub struct GenericRequest<T> {
     pub request: T,
 }
 
+const REVISION_HASH: &str = "0000000000000000000000000000000000000000000000000000000000000001";
+
 // ---------------------------------------------------------------------------
 // Auth & Credits Commands
 // ---------------------------------------------------------------------------
@@ -185,7 +187,7 @@ pub async fn load_agent_profile(request: Option<serde_json::Value>) -> Result<se
         .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
-        "agentId": agent_id,
+        "id": agent_id,
         "name": "Claude Code",
         "engine": "claude-code",
         "brief": "Full-stack code generation and refactoring assistant.",
@@ -194,9 +196,11 @@ pub async fn load_agent_profile(request: Option<serde_json::Value>) -> Result<se
         "defaultModel": null,
         "defaultProviderOptions": [],
         "memoryBudget": 4096,
-        "reflectionMode": "adaptive",
+        "reflectionMode": "auto",
         "allowAgentScheduling": true,
-        "confirmedByBuilder": true
+        "placeDisplayNames": [],
+        "disabledPluginIDs": [],
+        "createdAtUnixMs": 1724457600000i64
     }))
 }
 
@@ -227,7 +231,7 @@ pub async fn update_agent_profile(request: Option<serde_json::Value>) -> Result<
     let default_plan = req.and_then(|r| r.get("defaultPlan")).and_then(|p| p.as_bool()).unwrap_or(true);
 
     Ok(serde_json::json!({
-        "agentId": agent_id,
+        "id": agent_id,
         "name": name,
         "engine": engine,
         "brief": brief,
@@ -236,9 +240,11 @@ pub async fn update_agent_profile(request: Option<serde_json::Value>) -> Result<
         "defaultModel": null,
         "defaultProviderOptions": [],
         "memoryBudget": 4096,
-        "reflectionMode": "adaptive",
+        "reflectionMode": "auto",
         "allowAgentScheduling": true,
-        "confirmedByBuilder": true
+        "placeDisplayNames": [],
+        "disabledPluginIDs": [],
+        "createdAtUnixMs": 1724457600000i64
     }))
 }
 
@@ -323,8 +329,11 @@ pub async fn remove_agent_skill(request: Option<serde_json::Value>) -> Result<se
 pub async fn list_agent_starters(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
     Ok(serde_json::json!([
-        { "id": "code-review", "title": "Automated Code Reviewer", "summary": "Scans pull requests for security and architecture patterns." },
-        { "id": "doc-writer", "title": "Technical Documentation Generator", "summary": "Writes comprehensive markdown docs from source code." }
+        { "id": "keep-a-memory", "title": "Keep a Memory", "summary": "Teach your agent personal preferences and workflow habits." },
+        { "id": "write-a-skill", "title": "Write a Skill", "summary": "Add specialized domain skills and tool recipes to your agent." },
+        { "id": "research-a-question", "title": "Research a Question", "summary": "Perform deep autonomous research across your code and documents." },
+        { "id": "draft-for-a-reader", "title": "Draft for a Reader", "summary": "Draft technical specs and architectural proposals." },
+        { "id": "root-cause", "title": "Root Cause Investigation", "summary": "Diagnose and solve complex regressions and system bugs." }
     ]))
 }
 
@@ -432,7 +441,7 @@ pub async fn create_general_chat(request: Option<serde_json::Value>) -> Result<s
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
-        "revision": 1,
+        "revision": REVISION_HASH,
         "id": thread_id,
         "profileId": null,
         "provider": provider,
@@ -443,7 +452,7 @@ pub async fn create_general_chat(request: Option<serde_json::Value>) -> Result<s
         "model": null,
         "providerOptions": [],
         "status": "idle",
-        "usage": { "inputTokens": 0, "outputTokens": 0 },
+        "usage": { "inputTokens": 0, "outputTokens": 0, "costUsd": 0.0 },
         "createdAtUnixMs": 1724457600000i64,
         "updatedAtUnixMs": 1724457600000i64
     }))
@@ -460,7 +469,7 @@ pub async fn load_chat_thread(request: Option<serde_json::Value>) -> Result<serd
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
-        "revision": 1,
+        "revision": REVISION_HASH,
         "id": thread_id,
         "profileId": null,
         "provider": "claude",
@@ -471,7 +480,7 @@ pub async fn load_chat_thread(request: Option<serde_json::Value>) -> Result<serd
         "model": null,
         "providerOptions": [],
         "status": "idle",
-        "usage": { "inputTokens": 0, "outputTokens": 0 },
+        "usage": { "inputTokens": 0, "outputTokens": 0, "costUsd": 0.0 },
         "createdAtUnixMs": 1724457600000i64,
         "updatedAtUnixMs": 1724457600000i64
     }))
@@ -657,12 +666,30 @@ pub async fn create_code_thread(request: Option<serde_json::Value>) -> Result<se
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("workspaceId"))
         .and_then(|w| w.as_str())
-        .unwrap_or("w0000000-0000-4000-8000-000000000001");
+        .unwrap_or("d0000000-0000-4000-8000-000000000001");
+
+    let pane_id = request
+        .as_ref()
+        .and_then(|r| r.get("request"))
+        .and_then(|r| r.get("paneId"))
+        .and_then(|w| w.as_str())
+        .unwrap_or("b0000000-0000-4000-8000-000000000001");
+
+    let descriptor_id = request
+        .as_ref()
+        .and_then(|r| r.get("request"))
+        .and_then(|r| r.get("descriptorId"))
+        .and_then(|w| w.as_str())
+        .unwrap_or("e0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
-        "revision": 1,
-        "owner": { "kind": "workspace", "workspaceId": ws_id },
+        "revision": REVISION_HASH,
+        "owner": {
+            "workspaceId": ws_id,
+            "paneId": pane_id,
+            "descriptorId": descriptor_id
+        },
         "threadId": thread_id,
         "provider": "claude",
         "title": "Code Session",
@@ -672,7 +699,7 @@ pub async fn create_code_thread(request: Option<serde_json::Value>) -> Result<se
         "model": null,
         "providerOptions": [],
         "status": "idle",
-        "usage": { "inputTokens": 0, "outputTokens": 0 },
+        "usage": { "inputTokens": 0, "outputTokens": 0, "costUsd": 0.0 },
         "isDraft": false,
         "visible": true,
         "createdAtUnixMs": 1724457600000i64,
@@ -730,6 +757,7 @@ pub async fn read_code_thread_turn_updates(request: Option<serde_json::Value>) -
 
 #[command]
 pub async fn stop_code_thread_turn(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
+    let _ = request;
     Ok(serde_json::json!({ "stopping": true }))
 }
 
