@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 use tauri::command;
+use crate::app::storage::DB;
+use rusqlite::params;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GenericRequest<T> {
@@ -108,6 +110,41 @@ pub async fn credits_balance(request: Option<serde_json::Value>) -> Result<serde
 pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
     let browser_token = "d0000000-0000-4000-8000-000000000001";
+    let db = DB.lock();
+
+    let mut agents = Vec::new();
+    if let Ok(mut stmt) = db.conn.prepare("SELECT id, name, engine_json, purpose, created_at_unix_ms FROM agents") {
+        if let Ok(rows) = stmt.query_map([], |row| {
+            Ok(serde_json::json!({
+                "id": row.get::<_, String>(0)?,
+                "name": row.get::<_, String>(1)?,
+                "engine": row.get::<_, String>(2)?,
+                "purpose": row.get::<_, String>(3)?,
+                "createdAtUnixMs": row.get::<_, i64>(4)?
+            }))
+        }) {
+            for row in rows.flatten() {
+                agents.push(row);
+            }
+        }
+    }
+
+    let mut workspaces = Vec::new();
+    if let Ok(mut stmt) = db.conn.prepare("SELECT id, display_name, created_at_unix_ms, last_opened_at_unix_ms FROM workspaces") {
+        if let Ok(rows) = stmt.query_map([], |row| {
+            Ok(serde_json::json!({
+                "id": row.get::<_, String>(0)?,
+                "displayName": row.get::<_, String>(1)?,
+                "createdAtUnixMs": row.get::<_, i64>(2)?,
+                "lastOpenedAtUnixMs": row.get::<_, i64>(3)?
+            }))
+        }) {
+            for row in rows.flatten() {
+                workspaces.push(row);
+            }
+        }
+    }
+
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "preferences": {
@@ -120,8 +157,8 @@ pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json:
             "appearance": "dark",
             "zoomPercent": 100
         },
-        "agents": [],
-        "workspaces": [],
+        "agents": agents,
+        "workspaces": workspaces,
         "recoveryNotices": [],
         "persistenceReadOnly": false,
         "browserDocumentToken": browser_token
@@ -130,7 +167,21 @@ pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json:
 
 #[command]
 pub async fn save_shell_state(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
-    let _ = request;
+    if let Some(req) = request {
+        if let Some(pref) = req.get("request").and_then(|r| r.get("preferences")) {
+            let db = DB.lock();
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_millis() as i64;
+            let _ = db.conn.execute(
+                "INSERT INTO documents (key, schema_version, document_json, updated_at_unix_ms)
+                 VALUES (?1, 1, ?2, ?3)
+                 ON CONFLICT(key) DO UPDATE SET document_json = ?2, updated_at_unix_ms = ?3",
+                params!["shell-preferences", pref.to_string(), now],
+            );
+        }
+    }
     Ok(serde_json::Value::Null)
 }
 
@@ -143,11 +194,24 @@ pub async fn add_workspace(request: Option<serde_json::Value>) -> Result<serde_j
         .and_then(|p| p.as_str())
         .unwrap_or("Project Workspace");
 
+    let id = uuid::Uuid::new_v4().to_string();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
+
+    let db = DB.lock();
+    let _ = db.conn.execute(
+        "INSERT INTO workspaces (id, display_name, canonical_root, created_at_unix_ms, last_opened_at_unix_ms)
+         VALUES (?1, ?2, ?3, ?4, ?4)",
+        params![id, path, path, now],
+    );
+
     Ok(serde_json::json!({
-        "id": uuid::Uuid::new_v4().to_string(),
+        "id": id,
         "displayName": path,
-        "createdAtUnixMs": 1724457600000i64,
-        "lastOpenedAtUnixMs": 1724457600000i64
+        "createdAtUnixMs": now,
+        "lastOpenedAtUnixMs": now
     }))
 }
 
@@ -174,7 +238,43 @@ pub async fn save_workspace_layout(request: Option<serde_json::Value>) -> Result
 #[command]
 pub async fn list_agent_profiles(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    Ok(serde_json::json!([]))
+    let db = DB.lock();
+    let mut profiles = Vec::new();
+
+    if let Ok(mut stmt) = db.conn.prepare("SELECT id, name, engine_json, purpose, created_at_unix_ms, profile_json FROM agents") {
+        if let Ok(rows) = stmt.query_map([], |row| {
+            let id: String = row.get(0)?;
+            let name: String = row.get(1)?;
+            let engine: String = row.get(2)?;
+            let purpose: String = row.get(3)?;
+            let created_at: i64 = row.get(4)?;
+            let profile_json_str: String = row.get(5).unwrap_or_else(|_| "{}".to_string());
+            let profile_val: serde_json::Value = serde_json::from_str(&profile_json_str).unwrap_or_default();
+
+            Ok(serde_json::json!({
+                "id": id,
+                "name": name,
+                "engine": engine,
+                "brief": purpose,
+                "defaultMode": profile_val.get("defaultMode").and_then(|v| v.as_str()).unwrap_or("fullAccess"),
+                "defaultPlan": profile_val.get("defaultPlan").and_then(|v| v.as_bool()).unwrap_or(true),
+                "defaultModel": null,
+                "defaultProviderOptions": [],
+                "memoryBudget": 4096,
+                "reflectionMode": "auto",
+                "allowAgentScheduling": true,
+                "placeDisplayNames": [],
+                "disabledPluginIDs": [],
+                "createdAtUnixMs": created_at
+            }))
+        }) {
+            for row in rows.flatten() {
+                profiles.push(row);
+            }
+        }
+    }
+
+    Ok(serde_json::json!(profiles))
 }
 
 #[command]
@@ -186,21 +286,56 @@ pub async fn load_agent_profile(request: Option<serde_json::Value>) -> Result<se
         .and_then(|id| id.as_str())
         .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
-    Ok(serde_json::json!({
-        "id": agent_id,
-        "name": "Claude Code",
-        "engine": "claude-code",
-        "brief": "Full-stack code generation and refactoring assistant.",
-        "defaultMode": "fullAccess",
-        "defaultPlan": true,
-        "defaultModel": null,
-        "defaultProviderOptions": [],
-        "memoryBudget": 4096,
-        "reflectionMode": "auto",
-        "allowAgentScheduling": true,
-        "placeDisplayNames": [],
-        "disabledPluginIDs": [],
-        "createdAtUnixMs": 1724457600000i64
+    let db = DB.lock();
+    let mut row_opt = None;
+
+    if let Ok(mut stmt) = db.conn.prepare("SELECT name, engine_json, purpose, created_at_unix_ms, profile_json FROM agents WHERE id = ?1") {
+        if let Ok(mut rows) = stmt.query(params![agent_id]) {
+            if let Ok(Some(row)) = rows.next() {
+                let name: String = row.get(0).unwrap_or_default();
+                let engine: String = row.get(1).unwrap_or_else(|_| "claude-code".to_string());
+                let purpose: String = row.get(2).unwrap_or_default();
+                let created_at: i64 = row.get(3).unwrap_or(1724457600000);
+                let profile_json_str: String = row.get(4).unwrap_or_else(|_| "{}".to_string());
+                let profile_val: serde_json::Value = serde_json::from_str(&profile_json_str).unwrap_or_default();
+
+                row_opt = Some(serde_json::json!({
+                    "id": agent_id,
+                    "name": name,
+                    "engine": engine,
+                    "brief": purpose,
+                    "defaultMode": profile_val.get("defaultMode").and_then(|v| v.as_str()).unwrap_or("fullAccess"),
+                    "defaultPlan": profile_val.get("defaultPlan").and_then(|v| v.as_bool()).unwrap_or(true),
+                    "defaultModel": null,
+                    "defaultProviderOptions": [],
+                    "memoryBudget": 4096,
+                    "reflectionMode": "auto",
+                    "allowAgentScheduling": true,
+                    "placeDisplayNames": [],
+                    "disabledPluginIDs": [],
+                    "createdAtUnixMs": created_at
+                }));
+            }
+        }
+    }
+
+    Ok(row_opt.unwrap_or_else(|| {
+        serde_json::json!({
+            "id": agent_id,
+            "name": "Claude Code",
+            "engine": "claude-code",
+            "brief": "Full-stack code generation and refactoring assistant.",
+            "defaultMode": "fullAccess",
+            "defaultPlan": true,
+            "defaultModel": null,
+            "defaultProviderOptions": [],
+            "memoryBudget": 4096,
+            "reflectionMode": "auto",
+            "allowAgentScheduling": true,
+            "placeDisplayNames": [],
+            "disabledPluginIDs": [],
+            "createdAtUnixMs": 1724457600000i64
+        })
     }))
 }
 
@@ -211,12 +346,29 @@ pub async fn create_agent(request: Option<serde_json::Value>) -> Result<serde_js
     let engine = req.and_then(|r| r.get("engine")).and_then(|e| e.as_str()).unwrap_or("claude-code");
     let purpose = req.and_then(|r| r.get("purpose")).and_then(|p| p.as_str()).unwrap_or("");
 
+    let id = uuid::Uuid::new_v4().to_string();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
+
+    let db = DB.lock();
+    let _ = db.conn.execute(
+        "INSERT INTO agents (id, name, engine_json, purpose, created_at_unix_ms, profile_schema_version, profile_json)
+         VALUES (?1, ?2, ?3, ?4, ?5, 1, '{}')",
+        params![id, name, engine, purpose, now],
+    );
+
+    let _ = db.get_agent_dir(&id);
+    let _ = db.read_agent_memory(&id);
+    let _ = db.read_user_notes(&id);
+
     Ok(serde_json::json!({
-        "id": uuid::Uuid::new_v4().to_string(),
+        "id": id,
         "name": name,
         "engine": engine,
         "purpose": purpose,
-        "createdAtUnixMs": 1724457600000i64
+        "createdAtUnixMs": now
     }))
 }
 
@@ -229,6 +381,17 @@ pub async fn update_agent_profile(request: Option<serde_json::Value>) -> Result<
     let brief = req.and_then(|r| r.get("brief")).and_then(|b| b.as_str()).unwrap_or("");
     let default_mode = req.and_then(|r| r.get("defaultMode")).and_then(|m| m.as_str()).unwrap_or("fullAccess");
     let default_plan = req.and_then(|r| r.get("defaultPlan")).and_then(|p| p.as_bool()).unwrap_or(true);
+
+    let profile_obj = serde_json::json!({
+        "defaultMode": default_mode,
+        "defaultPlan": default_plan
+    });
+
+    let db = DB.lock();
+    let _ = db.conn.execute(
+        "UPDATE agents SET name = ?1, engine_json = ?2, purpose = ?3, profile_json = ?4 WHERE id = ?5",
+        params![name, engine, brief, profile_obj.to_string(), agent_id],
+    );
 
     Ok(serde_json::json!({
         "id": agent_id,
@@ -257,6 +420,9 @@ pub async fn delete_agent_profile(request: Option<serde_json::Value>) -> Result<
         .and_then(|id| id.as_str())
         .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
+    let db = DB.lock();
+    let _ = db.conn.execute("DELETE FROM agents WHERE id = ?1", params![agent_id]);
+
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "agentId": agent_id,
@@ -274,22 +440,44 @@ pub async fn load_agent_mind(request: Option<serde_json::Value>) -> Result<serde
         .and_then(|id| id.as_str())
         .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
+    let db = DB.lock();
+    let (memory_text, memory_hash) = db.read_agent_memory(agent_id);
+    let (user_text, user_hash) = db.read_user_notes(agent_id);
+
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
+
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "agentId": agent_id,
-        "memory": "You are BridgeMind One, an autonomous engineering intelligence.",
-        "user": "Lead Engineer\nPreferences: clean Rust, modern React, rigorous testing.",
+        "memory": memory_text,
+        "user": user_text,
         "skills": [],
-        "memoryUpdatedAtUnixMs": 1724457600000i64,
-        "userUpdatedAtUnixMs": 1724457600000i64,
-        "memoryRevision": null,
-        "userRevision": null,
+        "memoryUpdatedAtUnixMs": now,
+        "userUpdatedAtUnixMs": now,
+        "memoryRevision": memory_hash,
+        "userRevision": user_hash,
         "readIssues": []
     }))
 }
 
 #[command]
 pub async fn write_agent_memory(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
+    let req = request.as_ref().and_then(|r| r.get("request"));
+    let agent_id = req.and_then(|r| r.get("agentId")).and_then(|id| id.as_str()).unwrap_or("a0000000-0000-4000-8000-000000000001");
+    let target = req.and_then(|r| r.get("target")).and_then(|t| t.as_str()).unwrap_or("memory");
+    let text = req.and_then(|r| r.get("text")).and_then(|t| t.as_str()).unwrap_or("");
+    {
+        let db = DB.lock();
+        if target == "user" {
+            db.write_user_notes(agent_id, text);
+        } else {
+            db.write_agent_memory(agent_id, text);
+        }
+    }
+
     load_agent_mind(request).await
 }
 
@@ -438,6 +626,10 @@ pub async fn create_general_chat(request: Option<serde_json::Value>) -> Result<s
     let req = request.as_ref().and_then(|r| r.get("request"));
     let provider = req.and_then(|r| r.get("provider")).and_then(|p| p.as_str()).unwrap_or("claude");
     let thread_id = uuid::Uuid::new_v4().to_string();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -453,8 +645,8 @@ pub async fn create_general_chat(request: Option<serde_json::Value>) -> Result<s
         "providerOptions": [],
         "status": "idle",
         "usage": { "inputTokens": 0, "outputTokens": 0, "costUsd": 0.0 },
-        "createdAtUnixMs": 1724457600000i64,
-        "updatedAtUnixMs": 1724457600000i64
+        "createdAtUnixMs": now,
+        "updatedAtUnixMs": now
     }))
 }
 
@@ -466,6 +658,11 @@ pub async fn load_chat_thread(request: Option<serde_json::Value>) -> Result<serd
         .and_then(|r| r.get("threadId"))
         .and_then(|id| id.as_str())
         .unwrap_or("c0000000-0000-4000-8000-000000000001");
+
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -481,8 +678,8 @@ pub async fn load_chat_thread(request: Option<serde_json::Value>) -> Result<serd
         "providerOptions": [],
         "status": "idle",
         "usage": { "inputTokens": 0, "outputTokens": 0, "costUsd": 0.0 },
-        "createdAtUnixMs": 1724457600000i64,
-        "updatedAtUnixMs": 1724457600000i64
+        "createdAtUnixMs": now,
+        "updatedAtUnixMs": now
     }))
 }
 
@@ -682,6 +879,11 @@ pub async fn create_code_thread(request: Option<serde_json::Value>) -> Result<se
         .and_then(|w| w.as_str())
         .unwrap_or("e0000000-0000-4000-8000-000000000001");
 
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
+
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "revision": REVISION_HASH,
@@ -702,8 +904,8 @@ pub async fn create_code_thread(request: Option<serde_json::Value>) -> Result<se
         "usage": { "inputTokens": 0, "outputTokens": 0, "costUsd": 0.0 },
         "isDraft": false,
         "visible": true,
-        "createdAtUnixMs": 1724457600000i64,
-        "updatedAtUnixMs": 1724457600000i64
+        "createdAtUnixMs": now,
+        "updatedAtUnixMs": now
     }))
 }
 
