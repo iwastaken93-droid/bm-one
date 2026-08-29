@@ -105,7 +105,6 @@ pub async fn credits_balance(request: Option<serde_json::Value>) -> Result<serde
 #[command]
 pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    let agent_id = "a0000000-0000-0000-0000-000000000001";
     let browser_token = "d0000000-0000-0000-0000-000000000001";
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -119,13 +118,7 @@ pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json:
             "appearance": "dark",
             "zoomPercent": 100
         },
-        "agents": [{
-            "id": agent_id,
-            "name": "Claude Code",
-            "engine": "claude-code",
-            "purpose": "Full-stack code generation and refactoring assistant.",
-            "createdAtUnixMs": 1724457600000i64
-        }],
+        "agents": [],
         "workspaces": [],
         "recoveryNotices": [],
         "persistenceReadOnly": false,
@@ -179,21 +172,7 @@ pub async fn save_workspace_layout(request: Option<serde_json::Value>) -> Result
 #[command]
 pub async fn list_agent_profiles(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    let agent_id = "a0000000-0000-0000-0000-000000000001";
-    Ok(serde_json::json!([{
-        "agentId": agent_id,
-        "name": "Claude Code",
-        "engine": "claude-code",
-        "brief": "Full-stack code generation and refactoring assistant.",
-        "defaultMode": "fullAccess",
-        "defaultPlan": true,
-        "defaultModel": null,
-        "defaultProviderOptions": [],
-        "memoryBudget": 4096,
-        "reflectionMode": "adaptive",
-        "allowAgentScheduling": true,
-        "confirmedByBuilder": true
-    }]))
+    Ok(serde_json::json!([]))
 }
 
 #[command]
@@ -449,7 +428,7 @@ pub async fn list_chat_summaries(request: Option<serde_json::Value>) -> Result<s
 #[command]
 pub async fn create_general_chat(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let req = request.as_ref().and_then(|r| r.get("request"));
-    let provider = req.and_then(|r| r.get("provider")).and_then(|p| p.as_str()).unwrap_or("claude-code");
+    let provider = req.and_then(|r| r.get("provider")).and_then(|p| p.as_str()).unwrap_or("claude");
     let thread_id = uuid::Uuid::new_v4().to_string();
 
     Ok(serde_json::json!({
@@ -485,7 +464,7 @@ pub async fn load_chat_thread(request: Option<serde_json::Value>) -> Result<serd
         "revision": 1,
         "id": thread_id,
         "profileId": null,
-        "provider": "claude-code",
+        "provider": "claude",
         "title": "Assistant Thread",
         "items": [],
         "mode": "fullAccess",
@@ -556,8 +535,13 @@ pub async fn notifications_snapshot(request: Option<serde_json::Value>) -> Resul
         "records": [],
         "unreadCount": 0,
         "openInputRequestCount": 0,
-        "authorization": { "status": "authorized" },
-        "preferences": { "sounds": true, "badges": true },
+        "authorization": "authorized",
+        "preferences": {
+            "schemaVersion": 1,
+            "osNotificationsEnabled": true,
+            "finishSoundEnabled": true,
+            "inputRequestsEnabled": true
+        },
         "persistenceError": null,
         "archiveReadOnly": false,
         "openRecordId": null
@@ -681,7 +665,7 @@ pub async fn create_code_thread(request: Option<serde_json::Value>) -> Result<se
         "revision": 1,
         "owner": { "kind": "workspace", "workspaceId": ws_id },
         "threadId": thread_id,
-        "provider": "claude-code",
+        "provider": "claude",
         "title": "Code Session",
         "items": [],
         "mode": "fullAccess",
