@@ -105,7 +105,7 @@ pub async fn credits_balance(request: Option<serde_json::Value>) -> Result<serde
 #[command]
 pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    let browser_token = "d0000000-0000-0000-0000-000000000001";
+    let browser_token = "d0000000-0000-4000-8000-000000000001";
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "preferences": {
@@ -129,7 +129,7 @@ pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json:
 #[command]
 pub async fn save_shell_state(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    Ok(serde_json::json!({}))
+    Ok(serde_json::Value::Null)
 }
 
 #[command]
@@ -162,7 +162,7 @@ pub async fn load_workspace_layout(request: Option<serde_json::Value>) -> Result
 #[command]
 pub async fn save_workspace_layout(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    Ok(serde_json::json!({}))
+    Ok(serde_json::Value::Null)
 }
 
 // ---------------------------------------------------------------------------
@@ -182,7 +182,7 @@ pub async fn load_agent_profile(request: Option<serde_json::Value>) -> Result<se
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("agentId"))
         .and_then(|id| id.as_str())
-        .unwrap_or("a0000000-0000-0000-0000-000000000001");
+        .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "agentId": agent_id,
@@ -219,7 +219,7 @@ pub async fn create_agent(request: Option<serde_json::Value>) -> Result<serde_js
 #[command]
 pub async fn update_agent_profile(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let req = request.as_ref().and_then(|r| r.get("request"));
-    let agent_id = req.and_then(|r| r.get("agentId")).and_then(|id| id.as_str()).unwrap_or("a0000000-0000-0000-0000-000000000001");
+    let agent_id = req.and_then(|r| r.get("agentId")).and_then(|id| id.as_str()).unwrap_or("a0000000-0000-4000-8000-000000000001");
     let name = req.and_then(|r| r.get("name")).and_then(|n| n.as_str()).unwrap_or("Claude Code");
     let engine = req.and_then(|r| r.get("engine")).and_then(|e| e.as_str()).unwrap_or("claude-code");
     let brief = req.and_then(|r| r.get("brief")).and_then(|b| b.as_str()).unwrap_or("");
@@ -249,7 +249,7 @@ pub async fn delete_agent_profile(request: Option<serde_json::Value>) -> Result<
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("agentId"))
         .and_then(|id| id.as_str())
-        .unwrap_or("a0000000-0000-0000-0000-000000000001");
+        .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -266,7 +266,7 @@ pub async fn load_agent_mind(request: Option<serde_json::Value>) -> Result<serde
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("agentId"))
         .and_then(|id| id.as_str())
-        .unwrap_or("a0000000-0000-0000-0000-000000000001");
+        .unwrap_or("a0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -377,10 +377,9 @@ pub async fn list_routines(request: Option<serde_json::Value>) -> Result<serde_j
     let _ = request;
     Ok(serde_json::json!({
         "schemaVersion": 1,
-        "revision": 0,
         "routines": [],
-        "readOnly": false,
-        "recoveryMessage": null
+        "agentRevisions": [],
+        "runNowAvailability": { "available": true }
     }))
 }
 
@@ -457,7 +456,7 @@ pub async fn load_chat_thread(request: Option<serde_json::Value>) -> Result<serd
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("threadId"))
         .and_then(|id| id.as_str())
-        .unwrap_or("c0000000-0000-0000-0000-000000000001");
+        .unwrap_or("c0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -519,7 +518,7 @@ pub async fn read_chat_turn_updates(request: Option<serde_json::Value>) -> Resul
 #[command]
 pub async fn cancel_chat_turn(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    Ok(serde_json::json!({}))
+    Ok(serde_json::Value::Null)
 }
 
 // ---------------------------------------------------------------------------
@@ -591,13 +590,13 @@ pub async fn notifications_refresh_authorization(request: Option<serde_json::Val
 #[command]
 pub async fn notifications_open_system_settings(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    Ok(serde_json::json!({}))
+    Ok(serde_json::Value::Null)
 }
 
 #[command]
 pub async fn notifications_play_sample(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
     let _ = request;
-    Ok(serde_json::json!({}))
+    Ok(serde_json::Value::Null)
 }
 
 // ---------------------------------------------------------------------------
@@ -611,7 +610,7 @@ pub async fn start_terminal(request: Option<serde_json::Value>) -> Result<serde_
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("sessionId"))
         .and_then(|id| id.as_str())
-        .unwrap_or("t0000000-0000-0000-0000-000000000001");
+        .unwrap_or("t0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "sessionId": session_id,
@@ -658,7 +657,7 @@ pub async fn create_code_thread(request: Option<serde_json::Value>) -> Result<se
         .and_then(|r| r.get("request"))
         .and_then(|r| r.get("workspaceId"))
         .and_then(|w| w.as_str())
-        .unwrap_or("w0000000-0000-0000-0000-000000000001");
+        .unwrap_or("w0000000-0000-4000-8000-000000000001");
 
     Ok(serde_json::json!({
         "schemaVersion": 1,
@@ -731,7 +730,6 @@ pub async fn read_code_thread_turn_updates(request: Option<serde_json::Value>) -
 
 #[command]
 pub async fn stop_code_thread_turn(request: Option<serde_json::Value>) -> Result<serde_json::Value, String> {
-    let _ = request;
     Ok(serde_json::json!({ "stopping": true }))
 }
 
