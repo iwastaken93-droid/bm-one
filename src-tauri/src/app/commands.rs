@@ -114,7 +114,7 @@ pub async fn bootstrap(request: Option<serde_json::Value>) -> Result<serde_json:
             "workMode": "agent",
             "route": { "kind": "agent" },
             "selectedWorkspaceId": null,
-            "selectedAgentId": agent_id,
+            "selectedAgentId": null,
             "sidebarVisible": true,
             "appearance": "dark",
             "zoomPercent": 100
@@ -439,7 +439,7 @@ pub async fn list_chat_summaries(request: Option<serde_json::Value>) -> Result<s
     Ok(serde_json::json!({
         "schemaVersion": 1,
         "summaries": [],
-        "lastProvider": "claude-code",
+        "lastProvider": "claude",
         "readOnly": false,
         "skippedThreads": 0,
         "recoveryMessage": null
