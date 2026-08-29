@@ -36,3 +36,6 @@ Cargo.lock
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+*.exe
+bridgemind-one-rust.exe
